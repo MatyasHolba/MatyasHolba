@@ -89,7 +89,7 @@
         "OCR"
       ],
       "link": "",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "proj-4",
@@ -103,8 +103,8 @@
         "Chrome Extensions",
         "JavaScript"
       ],
-      "link": "https://chromewebstore.google.com/detail/npmjbkldiimcflkgdbkngcbdooneohcj?utm_source=item-share-cb",
-      "status": "active"
+      "link": "",
+      "status": "archived"
     },
     {
       "id": "proj-5",
@@ -120,7 +120,7 @@
         "PDF"
       ],
       "link": "",
-      "status": "active"
+      "status": "archived"
     },
     {
       "id": "proj-6",
@@ -136,7 +136,7 @@
         "Windows"
       ],
       "link": "",
-      "status": "active"
+      "status": "wip"
     },
     {
       "id": "proj-7",
@@ -152,6 +152,22 @@
         "Scraping"
       ],
       "link": "",
+      "status": "archived"
+    },
+    {
+      "id": "proj-1782085152332",
+      "title": "MonkeyType Translator – Learn languages while typing ",
+      "description": "Vzdělávací nástroj pro jazykovou praxi na Monkeytype: překládá slova během psaní a vytváří váš osobní slovník.\n\nToto rozšíření je určeno pro vzdělávací účely při používání platformy monkeytype.com. Jeho hlavní funkcí je automatické zobrazování překladů slov pomocí služby Google Translate. To umožňuje uživatelům rozšiřovat si slovní zásobu a zlepšovat porozumění angličtině či jiným jazykům přímo při psaní.\n\nTranslated with DeepL.com (free version)",
+      "features": [
+        "Překlad slov",
+        "Ukládání slov do slovníčku",
+        "JS, HTML, CSS"
+      ],
+      "tags": [
+        "Chrome Extensions",
+        "Learning Languages"
+      ],
+      "link": "https://chromewebstore.google.com/detail/npmjbkldiimcflkgdbkngcbdooneohcj?utm_source=item-share-cb",
       "status": "active"
     }
   ],
