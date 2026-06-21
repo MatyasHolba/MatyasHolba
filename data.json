@@ -10,7 +10,7 @@
     "og": {
       "title": "MH — About me",
       "description": "Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.",
-      "image": "og-image.png",
+      "image": "https://matyasholba.github.io/MatyasHolba/og-image.png",
       "url": "https://matyasholba.github.io/MatyasHolba/",
       "siteName": "MH Portfolio",
       "favicon": "favicon.png"
