@@ -10,8 +10,8 @@
     "og": {
       "title": "MH — Portfolio",
       "description": "Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.",
-      "image": "https://matyasholba.github.io/MatyasHolba/og-image.png",
-      "url": "https://matyasholba.github.io/MatyasHolba/",
+      "image": "https://MatyasHolba.github.io/MatyasHolba/og-image.png",
+      "url": "https://MatyasHolba.github.io/MatyasHolba/",
       "siteName": "MH Portfolio",
       "favicon": "favicon.png"
     },
@@ -42,13 +42,13 @@
     {
       "id": "social-1",
       "label": "GitHub",
-      "url": "https://github.com/MatyasHolba",
+      "url": "#",
       "icon": "github"
     },
     {
       "id": "social-2",
       "label": "Instagram",
-      "url": "https://www.instagram.com/matyas.holba",
+      "url": "#",
       "icon": "instagram"
     },
     {
