@@ -42,20 +42,14 @@
     {
       "id": "social-1",
       "label": "GitHub",
-      "url": "#",
+      "url": "https://github.com/MatyasHolba",
       "icon": "github"
     },
     {
       "id": "social-2",
       "label": "Instagram",
-      "url": "#",
+      "url": "https://github.com/MatyasHolba",
       "icon": "instagram"
-    },
-    {
-      "id": "social-3",
-      "label": "Email",
-      "url": "mailto:you@example.com",
-      "icon": "mail"
     }
   ],
   "techStack": [
