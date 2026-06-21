@@ -7,6 +7,14 @@
     "location": "Česká republika",
     "copyright": "2026",
     "accentColor": "#ffffff",
+    "og": {
+      "title": "MH — Portfolio",
+      "description": "Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.",
+      "image": "og-image.png",
+      "url": "",
+      "siteName": "MH Portfolio",
+      "favicon": "favicon.png"
+    },
     "navLinks": [
       {
         "label": "O mně",
