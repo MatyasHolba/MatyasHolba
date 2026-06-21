@@ -76,40 +76,6 @@
   ],
   "projects": [
     {
-      "id": "proj-1",
-      "title": "Vlastní futuristický panel pro Windows",
-      "description": "Plně přizpůsobitelný systémový panel s moderním designem a inteligentními funkcemi.",
-      "features": [
-        "RGB a moderní vzhled.",
-        "Přizpůsobitelný design.",
-        "Klávesové zkratky.",
-        "Automatické přizpůsobení barev podle aktivní aplikace."
-      ],
-      "tags": [
-        "Python",
-        "Windows API"
-      ],
-      "link": "",
-      "status": "active"
-    },
-    {
-      "id": "proj-2",
-      "title": "Vizuální plánovač ve stylu myšlenkové mapy",
-      "description": "Interaktivní nástroj pro organizaci myšlenek a projektů s vizuálním stromem.",
-      "features": [
-        "Převod textu na vizuální strom.",
-        "Správa úkolů.",
-        "Poznámky a přílohy.",
-        "Moderní interaktivní rozhraní."
-      ],
-      "tags": [
-        "Flutter",
-        "Dart"
-      ],
-      "link": "",
-      "status": "active"
-    },
-    {
       "id": "proj-3",
       "title": "Nástroj pro OCR dlouhých screenshotů",
       "description": "Automatizovaný OCR nástroj pro extrakci textu z dlouhých screenshotů.",
@@ -137,7 +103,7 @@
         "Chrome Extensions",
         "JavaScript"
       ],
-      "link": "",
+      "link": "https://chromewebstore.google.com/detail/npmjbkldiimcflkgdbkngcbdooneohcj?utm_source=item-share-cb",
       "status": "active"
     },
     {
@@ -203,5 +169,11 @@
       "photo": ""
     }
   ],
-  "gallery": []
+  "gallery": [
+    {
+      "id": "img-17820833877230.8796147117831346",
+      "src": "photos/profile picture.png",
+      "caption": ""
+    }
+  ]
 }
