@@ -1727,7 +1727,7 @@
 
     // ── Main init: load + decode ──
     async function loadFrameImages(layer, totalFrames, onProgress) {
-        const folderName = layer === 1 ? 'NORMAL_frames' : 'HACKER_frames';
+        const folderName = layer === 1 ? 'first_layer' : 'second_layer';
         const bitmaps = new Array(totalFrames);
         let loaded = 0;
 
