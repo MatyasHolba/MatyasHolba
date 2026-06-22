@@ -40,9 +40,10 @@
   },
   "animation": {
     "enabled": true,
-    "totalFrames": 92,
     "scrollHeight": 275,
     "hologramType": "carousel",
+    "layer1Video": "1.mp4",
+    "layer2Video": "2.mp4",
     "hologramYOffset": 63,
     "cardsStart": 50,
     "cardsEnd": 92,
@@ -207,5 +208,18 @@
       "src": "photos/profile picture.png",
       "caption": ""
     }
-  ]
+  ],
+  "sections": {
+    "about": true,
+    "goals": true,
+    "projects": true,
+    "feed": true,
+    "gallery": true
+  },
+  "integrations": {
+    "duolingo": {
+      "enabled": false,
+      "username": ""
+    }
+  }
 }
