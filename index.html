@@ -9,20 +9,34 @@
     <title>MH — Portfolio</title>
     <meta name="description" content="Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.">
     <!-- FAVICON:START -->
+
     <link rel="icon" id="favicon-link" href="favicon.png" type="image/png">
+
     <link rel="shortcut icon" href="favicon.png">
+
     <!-- FAVICON:END -->
     <!-- OG:START -->
+
     <meta property="og:title" content="MH — Portfolio">
+
     <meta property="og:description" content="Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.">
+
     <meta property="og:image" content="https://matyasholba.github.io/MatyasHolba/og-image.png">
+
     <meta property="og:url" content="https://matyasholba.github.io/MatyasHolba/">
+
     <meta property="og:type" content="website">
+
     <meta property="og:site_name" content="MH Portfolio">
+
     <meta name="twitter:card" content="summary_large_image">
+
     <meta name="twitter:title" content="MH — Portfolio">
+
     <meta name="twitter:description" content="Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.">
+
     <meta name="twitter:image" content="https://matyasholba.github.io/MatyasHolba/og-image.png">
+
     <!-- OG:END -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -673,7 +687,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;  /* must be visible for 3D carousel */
             color-scheme: light;
         }
 
@@ -688,6 +702,9 @@
             /* Counter Dark Reader SVG filter applied to html/body */
             filter: none !important;
             -webkit-filter: none !important;
+            /* Smooth parallax + idle animation */
+            will-change: transform;
+            transform-origin: center center;
         }
 
         /* White-to-dark page transition overlay */
@@ -698,25 +715,25 @@
             z-index: -1;
             pointer-events: none;
             transition: background 0.05s linear;
-            /* Block Dark Reader */
             color-scheme: light;
             filter: none !important;
             -webkit-filter: none !important;
         }
 
-        /* Project cards that float between the hands */
+        /* ── 3D Carousel container ── */
         #scene-projects {
             position: absolute;
-            bottom: 28%;
+            bottom: 42%;
             left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            gap: 16px;
+            width: 0;
+            height: 0;
             opacity: 0;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.5s ease;
             pointer-events: none;
             z-index: 10;
-            max-width: 90vw;
+            /* 3D context */
+            perspective: 720px;
+            transform-style: preserve-3d;
         }
 
         #scene-projects.visible {
@@ -725,27 +742,29 @@
         }
 
         .scene-proj-card {
-            background: rgba(255,255,255,0.92);
-            border: 1px solid rgba(0,0,0,0.12);
-            border-radius: 14px;
-            padding: 14px 18px;
-            backdrop-filter: blur(12px);
-            min-width: 140px;
-            max-width: 160px;
+            position: absolute;
+            width: 170px;
+            margin-left: -85px;
+            margin-top: -115px;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(0,0,0,0.09);
+            border-radius: 18px;
+            padding: 20px 18px;
+            backdrop-filter: blur(16px);
             text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
             cursor: pointer;
             text-decoration: none;
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            animation: cardFloat 0.5s ease both;
+            gap: 8px;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            transition: box-shadow 0.25s ease;
         }
 
         .scene-proj-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .scene-proj-card .sp-num {
@@ -757,20 +776,19 @@
         }
 
         .scene-proj-card .sp-title {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             color: #111;
-            line-height: 1.3;
+            line-height: 1.35;
         }
 
         .scene-proj-card .sp-tag {
             font-size: 10px;
-            color: #666;
-        }
-
-        @keyframes cardFloat {
-            from { opacity: 0; transform: translateY(20px); }
-            to   { opacity: 1; transform: translateY(0); }
+            color: #777;
+            background: rgba(123,123,255,0.1);
+            border-radius: 20px;
+            padding: 2px 8px;
+            display: inline-block;
         }
 
         /* Scroll hint */
@@ -925,8 +943,6 @@
     </nav>
 </header>
 
-<!-- ═══ FRAME SCENE (scroll animation) ═══
-     To disable this entirely, remove #frame-scene div and delete scene JS block below -->
 <div id="scene-bg"></div>
 <div id="frame-scene">
     <div id="frame-sticky">
@@ -940,7 +956,9 @@
 </div>
 <!-- ═══════════════════════════════════ -->
 
-<main>
+<!-- ═══ FRAME SCENE (scroll animation) ═══
+     To disable this entirely, remove #frame-scene div and delete scene JS block below -->
+<main style="position:relative; z-index:20; background:var(--bg);">
     <!-- Hero -->
     <div class="hero" id="hero">
         <div class="hero-label" id="hero-label">Portfolio</div>
@@ -961,7 +979,11 @@
     </section>
 
     <!-- Cíle -->
-    <section id="goals" class="reveal">
+    
+
+
+
+<section id="goals" class="reveal">
         <div class="section-header">
             <span class="section-number">02</span>
             <h2>Dlouhodobé cíle</h2>
@@ -1271,7 +1293,7 @@
             renderFooter(data);
             // Configure & populate the scroll animation scene
             if (window.configureScene)    window.configureScene(data.animation || {});
-            if (window.buildSceneProjects) window.buildSceneProjects(data.projects || []);
+            if (window.buildSceneProjects) window.buildSceneProjects(data.projects || [], (data.animation||{}).selectedProjects || []);
         }
 
         // Hide loader
@@ -1293,12 +1315,14 @@
 <script>
 (function() {
     const TOTAL_FRAMES = 92;
-    const FRAME_PATH   = i => `frames/frame_${String(i).padStart(4,'0')}.png`;
+    const N_FRAME_PATH = i => `frames/NORMAL_frames/frame_${String(i).padStart(4,'0')}.png`;
+    const H_FRAME_PATH = i => `frames/HACKER_frames/frame_${String(i).padStart(4,'0')}.png`;
 
-    // Configurable – overridden by window.configureScene()
-    let CARDS_START_FRAME = 50;
-    let CARDS_END_FRAME   = 80;
-    let sceneEnabled      = true;
+    // Configurable via window.configureScene()
+    let CARDS_START_FRAME  = 50;
+    let CARDS_END_FRAME    = 80;
+    let carouselSpeedDeg   = 0.25;  // degrees per rAF frame
+    let sceneEnabled       = true;
 
     const canvas   = document.getElementById('frame-canvas');
     const ctx      = canvas.getContext('2d');
@@ -1308,127 +1332,290 @@
     const projBox  = document.getElementById('scene-projects');
     const header   = document.getElementById('header');
 
-    const images   = new Array(TOTAL_FRAMES).fill(null);
-    let   loaded   = 0;
-    let   sceneProjectsRendered = false;
-    let   sceneDone = false;
+    const normalImages = new Array(TOTAL_FRAMES).fill(null);
+    const hackerImages = new Array(TOTAL_FRAMES).fill(null);
+    let currentFrameIdx = 0;
+    let sceneProjectsBuilt = false;
+    let sceneDone          = false;
+    let carouselVisible    = false;
+    let carouselAngle      = 0;
 
-    // ── Preload all frames progressively ──────────────────
-    function preloadFrames() {
-        // Load first 5 immediately, then rest in background
-        const priority = [...Array(5).keys()].map(i => i + 1);
-        const rest     = [...Array(TOTAL_FRAMES - 5).keys()].map(i => i + 6);
+    // ── Mouse parallax & bubble state (smoothed with lerp) ──────
+    let mtx = 0, mty = 0; // target parallax
+    let mcx = 0, mcy = 0; // current parallax
+    
+    let mx = window.innerWidth / 2, my = window.innerHeight / 2; // target absolute
+    let smx = mx, smy = my; // smoothed absolute
+    let isHovering = false;
 
-        const load = idx => {
-            const img = new Image();
-            img.onload = () => {
-                images[idx - 1] = img;
-                loaded++;
-                if (idx === 1) drawFrame(0); // Show first frame ASAP
-            };
-            img.src = FRAME_PATH(idx);
-        };
+    document.addEventListener('mousemove', e => {
+        mtx = (e.clientX / window.innerWidth  - 0.5) * 2; 
+        mty = (e.clientY / window.innerHeight - 0.5) * 2; 
+        mx = e.clientX;
+        my = e.clientY;
+    });
+    
+    // Touch support for mobile mask effect
+    document.addEventListener('touchmove', e => {
+        if (e.touches.length > 0) {
+            const touch = e.touches[0];
+            mtx = (touch.clientX / window.innerWidth  - 0.5) * 2; 
+            mty = (touch.clientY / window.innerHeight - 0.5) * 2; 
+            mx = touch.clientX;
+            my = touch.clientY;
+            isHovering = true;
+        }
+    }, {passive: true});
+    document.addEventListener('touchend', () => { isHovering = false; });
+    
+    // Hide bubble on leave
+    scene.addEventListener('mouseenter', () => { isHovering = true; });
+    scene.addEventListener('mouseleave', () => { isHovering = false; });
+    
+    // Smooth return to center on document mouse leave
+    document.addEventListener('mouseleave', () => { 
+        mtx = 0; mty = 0; 
+        mx = window.innerWidth / 2; my = window.innerHeight / 2;
+    });
 
-        priority.forEach(load);
-        // Stagger background loading to not block first frame
-        rest.forEach((idx, i) => setTimeout(() => load(idx), i * 20));
-    }
+    // ── rAF loop: parallax + idle + carousel ────────────────
+    function rafLoop(time) {
+        requestAnimationFrame(rafLoop);
 
-    // ── Canvas sizing ──────────────────────────────────────
-    function resizeCanvas(img) {
-        if (!img) return;
-        const aspect = img.naturalWidth / img.naturalHeight;
-        const vh = window.innerHeight;
-        const vw = window.innerWidth;
-        if (vw / vh > aspect) {
-            canvas.height = vh;
-            canvas.width  = vh * aspect;
-        } else {
-            canvas.width  = vw;
-            canvas.height = vw / aspect;
+        // Smooth mouse with lerp
+        mcx += (mtx - mcx) * 0.055;
+        mcy += (mty - mcy) * 0.055;
+        
+        // Fluid bubble movement (slightly faster than parallax for responsiveness)
+        smx += (mx - smx) * 0.12;
+        smy += (my - smy) * 0.12;
+
+        // Idle breathing: gentle sine waves
+        const t = time / 1000;
+        const idleY     = Math.sin(t * 0.62) * 3.2;           // px up/down
+        const idleScale = 1.15 + Math.sin(t * 0.41) * 0.0038; // zoomed in by 15%
+        const idleTiltX = Math.sin(t * 0.28) * 0.4;          // micro tilt
+
+        // Apply to canvas (parallax + idle)
+        const rotY = mcx * 0.5 + idleTiltX; // Miniscule horizontal tilt
+        const rotX = 0;                     // No vertical tilt
+        
+        // Minimal inverse translation (few pixels)
+        const transX = -mcx * 5; 
+        const transY = idleY - mcy * 5; 
+
+        canvas.style.transform =
+            `perspective(1400px) rotateY(${rotY}deg) rotateX(${rotX}deg) ` +
+            `translate(${transX}px, ${transY}px) scale(${idleScale})`;
+            
+        // Sync projects container with the same translation and scale
+        projBox.style.transform = `translate(${transX}px, ${transY}px) scale(${idleScale})`;
+
+        // Carousel rotation
+        if (carouselVisible) {
+            carouselAngle += carouselSpeedDeg;
+            renderCarousel();
+        }
+
+        // Draw Canvas (Normal + Hacker Bubble)
+        if (normalImages[currentFrameIdx]) {
+            const img = normalImages[currentFrameIdx];
+            
+            // Explicitly set canvas internal resolution to viewport
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // White background 
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Calc contain bounds so image spans proportionally
+            const ar = img.naturalWidth / img.naturalHeight;
+            let drawW, drawH;
+            if (canvas.width / canvas.height > ar) {
+                drawH = canvas.height; drawW = drawH * ar;
+            } else {
+                // Mobile/Portrait screen: zoom image so it covers at least 85% of screen height
+                drawH = canvas.height * 0.85; 
+                drawW = drawH * ar;
+                if (drawW < canvas.width) {
+                    drawW = canvas.width; drawH = drawW / ar;
+                }
+            }
+            const drawX = (canvas.width - drawW) / 2;
+            
+            // Anchor image to bottom!
+            const drawY = canvas.height - drawH;
+            
+            // Update #scene-projects position to exactly between the hands!
+            const handsY = drawY + drawH * 0.48;
+            projBox.style.top = `${handsY}px`;
+            projBox.style.bottom = 'auto';
+
+            // Draw normal
+            ctx.drawImage(img, drawX, drawY, drawW, drawH);
+
+            // Draw hacker inside bubble ONLY if mouse is over scene
+            if (isHovering && hackerImages[currentFrameIdx]) {
+                const maskX = smx;
+                const maskY = smy;
+
+                ctx.save();
+                
+                // Organic blob path
+                const numPoints = 8;
+                const points = [];
+                const baseRadius = 240; // Static base size irrespective of zoom
+                for (let i = 0; i < numPoints; i++) {
+                    const angle = (i / numPoints) * Math.PI * 2;
+                    const rOffset = Math.sin(t * 2.5 + i * 2) * 25 + Math.cos(t * 1.8 - i) * 15;
+                    const r = baseRadius + rOffset;
+                    points.push({ x: maskX + Math.cos(angle) * r, y: maskY + Math.sin(angle) * r });
+                }
+                
+                ctx.beginPath();
+                for (let i = 0; i <= numPoints; i++) {
+                    const p1 = points[i % numPoints];
+                    const p2 = points[(i + 1) % numPoints];
+                    const midX = (p1.x + p2.x) / 2;
+                    const midY = (p1.y + p2.y) / 2;
+                    if (i === 0) {
+                        const lastP = points[numPoints - 1];
+                        ctx.moveTo((lastP.x + p1.x) / 2, (lastP.y + p1.y) / 2);
+                    }
+                    ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
+                }
+                ctx.closePath();
+                ctx.clip();
+                
+                // Black background to block normal frame
+                ctx.fillStyle = '#050507';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.drawImage(hackerImages[currentFrameIdx], drawX, drawY, drawW, drawH);
+                ctx.restore();
+            }
         }
     }
+    requestAnimationFrame(rafLoop);
 
-    // ── Draw a specific frame ──────────────────────────────
-    function drawFrame(frameIdx) {
-        const img = images[frameIdx];
-        if (!img) return;
-        resizeCanvas(img);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    // ── 3D Mill carousel ──────────────────────────────────
+        function renderCarousel() {
+        const cards = projBox.querySelectorAll('.scene-proj-card');
+        const n = cards.length;
+        if (!n) return;
+        const step = 360 / n;
+        
+        // Responsive radius
+        const isMobile = window.innerWidth < 768;
+        const R = isMobile ? 120 : 200;
+
+        cards.forEach((card, i) => {
+            const ang = (carouselAngle + i * step) % 360;
+            const rad = ang * Math.PI / 180;
+            const x   = Math.sin(rad) * R;
+            const z   = Math.cos(rad) * R;
+            // Normalize depth: 0 (back) to 1 (front)
+            const tz  = (z + R) / (2 * R);
+            
+            // Exaggerated depth: shrink massively in the back
+            const baseScale = isMobile ? 0.75 : 1.0;
+            const sc  = baseScale * (0.15 + tz * 0.85);   
+            // Fade out in the back half
+            const op  = tz > 0.3 ? (tz - 0.3) * 1.4 : 0;   
+
+            card.style.transform    = `translateX(${x}px) translateZ(${z}px) scale(${sc})`;
+            card.style.opacity      = Math.min(1, op);
+            card.style.zIndex       = Math.round(tz * 100);
+            card.style.pointerEvents= tz > 0.65 ? 'auto' : 'none';
+        });
     }
 
-    // ── Colour interpolation helper ────────────────────────
-    function lerp(a, b, t) { return a + (b - a) * t; }
-    function hexToRgb(hex) {
-        const r = parseInt(hex.slice(1,3),16);
-        const g = parseInt(hex.slice(3,5),16);
-        const b = parseInt(hex.slice(5,7),16);
-        return [r,g,b];
+    // ── Frame preloading ──────────────────────────────────
+    function preloadFrames() {
+        const load = idx => {
+            const nImg = new Image();
+            const hImg = new Image();
+            let loaded = 0;
+            const onload = () => {
+                loaded++;
+                if (loaded === 2) {
+                    normalImages[idx-1] = nImg;
+                    hackerImages[idx-1] = hImg;
+                }
+            };
+            nImg.onload = onload;
+            hImg.onload = onload;
+            nImg.src = N_FRAME_PATH(idx);
+            hImg.src = H_FRAME_PATH(idx);
+        };
+        [1,2,3,4,5].forEach(load);
+        Array.from({length: TOTAL_FRAMES-5}, (_,i)=>i+6)
+             .forEach((idx,i) => setTimeout(() => load(idx), i*18));
     }
 
-    // ── Main scroll handler ────────────────────────────────
+    // ── Canvas draw ─────────────────────────────────────
+    // (Resize is now handled directly in rafLoop)
+
+    // ── Scroll handler ─────────────────────────────────
+    function lerp(a,b,t) { return a + (b-a)*t; }
+
     function onScroll() {
-        const sceneRect = scene.getBoundingClientRect();
-        const sceneH    = scene.offsetHeight - window.innerHeight;
-        const scrolled  = Math.min(Math.max(-sceneRect.top, 0), sceneH);
-        const progress  = scrolled / sceneH; // 0 → 1
+        if (!sceneEnabled) return;
+        const sceneH   = scene.offsetHeight - window.innerHeight;
+        const scrolled = Math.min(Math.max(-scene.getBoundingClientRect().top, 0), sceneH);
+        const progress = scrolled / sceneH; // 0..1
 
         // Frame index
-        const frameIdx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
-        drawFrame(frameIdx);
+        currentFrameIdx = Math.min(Math.floor(progress * (TOTAL_FRAMES-1)), TOTAL_FRAMES-1);
 
-        // Background: white → dark (#050507) during last 30% of scroll
-        const bgStart = 0.65;
-        const bgT     = Math.max(0, Math.min(1, (progress - bgStart) / 0.35));
-        const [tr,tg,tb] = [5,5,7]; // --bg-main colour
-        const r = Math.round(lerp(255, tr, bgT));
-        const g = Math.round(lerp(255, tg, bgT));
-        const b = Math.round(lerp(255, tb, bgT));
-        sceneBg.style.background = `rgb(${r},${g},${b})`;
+        // Background: white → dark (#050507) in last 35%
+        const bgT = Math.max(0, Math.min(1, (progress - 0.65) / 0.35));
+        sceneBg.style.background = `rgb(${Math.round(lerp(255,5,bgT))},${Math.round(lerp(255,5,bgT))},${Math.round(lerp(255,7,bgT))})`;
 
-        // Header: light mode during white phase
-        if (bgT < 0.5) {
-            header.classList.add('scene-light');
-        } else {
-            header.classList.remove('scene-light');
-        }
+        if (bgT < 0.5) header.classList.add('scene-light');
+        else           header.classList.remove('scene-light');
 
-        // Scroll hint: fade out after 5% scroll
         hint.style.opacity = Math.max(0, 1 - progress * 20);
 
-        // Project cards: show between hands (frames 50–80)
-        const showCards = frameIdx >= CARDS_START_FRAME && frameIdx <= CARDS_END_FRAME;
+        // Carousel visibility
+        const showCards = currentFrameIdx >= CARDS_START_FRAME && currentFrameIdx <= CARDS_END_FRAME;
+        carouselVisible = showCards;
         projBox.classList.toggle('visible', showCards);
 
-        // Main content: reveal when scene is done (progress ≥ 1)
+        // Reveal main content
         if (progress >= 0.98 && !sceneDone) {
             sceneDone = true;
             document.body.classList.remove('scene-active');
             document.querySelector('main').style.animation = 'sceneReveal 0.6s ease both';
-        } else if (progress < 0.98) {
-            if (sceneDone) {
-                sceneDone = false;
-                document.body.classList.add('scene-active');
-            }
+        } else if (progress < 0.98 && sceneDone) {
+            sceneDone = false;
+            document.body.classList.add('scene-active');
         }
     }
 
-    // ── Build project cards (called after data loads) ──────
-    window.buildSceneProjects = function(projects) {
-        if (sceneProjectsRendered) return;
-        sceneProjectsRendered = true;
+    // ── Build project cards ──────────────────────────────
+    window.buildSceneProjects = function(projects, selectedIds) {
+        if (sceneProjectsBuilt) return;
+        sceneProjectsBuilt = true;
         projBox.innerHTML = '';
-        (projects || []).slice(0, 4).forEach((p, i) => {
+
+        let toShow = projects || [];
+        if (selectedIds && selectedIds.length > 0) {
+            const ordered = selectedIds.map(id => toShow.find(p => p.id === id)).filter(Boolean);
+            if (ordered.length > 0) toShow = ordered;
+        }
+        toShow = toShow.slice(0, 8); // max 8
+        if (!toShow.length) return;
+
+        toShow.forEach((p, i) => {
             const a = document.createElement('a');
             a.className = 'scene-proj-card';
             a.href = `#project-${p.id}`;
-            a.style.animationDelay = `${i * 0.1}s`;
             a.innerHTML = `
                 <div class="sp-num">Projekt ${String(i+1).padStart(2,'0')}</div>
                 <div class="sp-title">${p.title || ''}</div>
-                <div class="sp-tag">${(p.tags||[])[0] || ''}</div>`;
-            // Smooth scroll to project section
+                ${(p.tags||[])[0] ? `<div class="sp-tag">${(p.tags||[])[0]}</div>` : ''}`;
             a.addEventListener('click', e => {
                 e.preventDefault();
                 window.scrollTo({ top: scene.offsetHeight + document.querySelector('main').offsetTop, behavior:'smooth' });
@@ -1439,13 +1626,14 @@
             });
             projBox.appendChild(a);
         });
+
+        renderCarousel(); // initial position
     };
 
-    // ── Runtime configuration (called by init() after loading data) ──
+    // ── Runtime config ──────────────────────────────────
     window.configureScene = function(cfg) {
         if (!cfg) return;
         if (cfg.enabled === false) {
-            // Disable scene entirely
             sceneEnabled = false;
             scene.style.display = 'none';
             document.getElementById('scene-bg').style.display = 'none';
@@ -1467,7 +1655,10 @@
     header.classList.add('scene-light');
     preloadFrames();
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => { const fi = Math.min(Math.floor(((-scene.getBoundingClientRect().top) / (scene.offsetHeight - window.innerHeight)) * (TOTAL_FRAMES-1)), TOTAL_FRAMES-1); drawFrame(Math.max(0,fi)); });
+    window.addEventListener('resize', () => {
+        const p = Math.max(0, Math.min(1, (-scene.getBoundingClientRect().top) / (scene.offsetHeight - window.innerHeight)));
+        currentFrameIdx = Math.min(Math.floor(p*(TOTAL_FRAMES-1)), TOTAL_FRAMES-1);
+    });
     onScroll(); // run once on load
 })();
 </script>
