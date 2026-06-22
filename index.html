@@ -1623,8 +1623,8 @@
             };
             resetWatchdog();
 
-            if (typeof vid.requestVideoFrameCallback === 'function') {
-                vid.playbackRate = 16; // Fast forward
+            if (false) {
+                vid.playbackRate = 2; // play at 2x speed to minimize frame drops but load fast // Fast forward
                 vid.muted = true;
                 vid.onended = finish;
 
