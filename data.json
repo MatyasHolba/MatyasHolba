@@ -38,6 +38,12 @@
       }
     ]
   },
+  "animation": {
+    "enabled": true,
+    "scrollHeight": 250,
+    "cardsStart": 50,
+    "cardsEnd": 80
+  },
   "socials": [
     {
       "id": "social-1",
