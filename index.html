@@ -944,6 +944,80 @@
             color: rgba(255,255,255,0.7);
             letter-spacing: 1px;
         }
+
+        /* ── Duolingo Widget ── */
+        .duo-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 28px 32px;
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 620px;
+        }
+        .duo-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #58cc02;
+            flex-shrink: 0;
+        }
+        .duo-avatar-placeholder {
+            width: 72px; height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #58cc02, #89e219);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 32px; flex-shrink: 0;
+        }
+        .duo-info { flex: 1; min-width: 200px; }
+        .duo-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+        .duo-username {
+            font-size: 13px;
+            color: var(--text3);
+            margin-bottom: 16px;
+        }
+        .duo-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .duo-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--bg3);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 16px;
+            min-width: 70px;
+        }
+        .duo-stat-val {
+            font-size: 22px;
+            font-weight: 800;
+            color: #58cc02;
+            line-height: 1;
+        }
+        .duo-stat-label {
+            font-size: 11px;
+            color: var(--text3);
+            margin-top: 4px;
+            text-align: center;
+        }
+        .duo-streak .duo-stat-val { color: #ff9600; }
+        .duo-error {
+            font-size: 13px;
+            color: var(--text3);
+            font-style: italic;
+        }
+        .duo-loading { font-size: 13px; color: var(--text3); }
     </style>
 </head>
 <body>
@@ -972,7 +1046,9 @@
 <div id="scene-bg"></div>
 <div id="frame-scene">
     <div id="frame-sticky">
-        <canvas id="frame-canvas"></canvas>
+            <video id="vid-layer1" muted playsinline preload="auto" style="display:none"></video>
+    <video id="vid-layer2" muted playsinline preload="auto" style="display:none"></video>
+    <canvas id="frame-canvas"></canvas>
         <div id="scene-projects"></div>
         <div id="scene-scroll-hint">
             <span>Scroll</span>
@@ -1046,6 +1122,18 @@
             <div class="section-line"></div>
         </div>
         <div class="gallery-grid" id="gallery-grid"></div>
+    </section>
+
+    <!-- Duolingo widget (hidden by default, shown when integration enabled) -->
+    <section id="duolingo-widget" class="reveal" style="display:none">
+        <div class="section-header">
+            <span class="section-number" id="duolingo-section-num">06</span>
+            <h2>Duolingo</h2>
+            <div class="section-line"></div>
+        </div>
+        <div class="duo-card" id="duo-card">
+            <div class="duo-loading">Načítám Duolingo statistiky...</div>
+        </div>
     </section>
 </main>
 
@@ -1311,12 +1399,47 @@
         if (data) {
             renderNav(data);
             renderHero(data);
+            
+            // Section visibility
+            const vis = (data.sections || {});
+            const hide = (id) => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = 'none';
+            };
+            if (vis.about    === false) hide('about');
+            if (vis.goals    === false) hide('goals');
+            if (vis.projects === false) hide('projects');
+            if (vis.feed     === false) hide('feed');
+            if (vis.gallery  === false) hide('gallery');
+            
             renderAbout(data);
             renderGoals(data);
             renderProjects(data);
             renderFeed(data);
             renderGallery(data);
             renderFooter(data);
+            
+            // Renumber visible sections
+            let sectionNum = 1;
+            ['about','goals','projects','feed','gallery'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.style.display !== 'none') {
+                    const numEl = el.querySelector('.section-number');
+                    if (numEl) numEl.textContent = String(sectionNum).padStart(2, '0');
+                    sectionNum++;
+                }
+            });
+            
+            // Duolingo integration
+            if (data.integrations && data.integrations.duolingo && data.integrations.duolingo.enabled) {
+                const duoSection = document.getElementById('duolingo-widget');
+                if (duoSection) {
+                    duoSection.style.display = '';
+                    const numEl = duoSection.querySelector('.section-number');
+                    if (numEl) numEl.textContent = String(sectionNum).padStart(2, '0');
+                    loadDuolingo(data.integrations.duolingo.username);
+                }
+            }
             // Configure & populate the scroll animation scene
             if (window.configureScene)    window.configureScene(data.animation || {});
             if (window.buildSceneProjects) window.buildSceneProjects(data.projects || [], data.animation || {});
@@ -1338,18 +1461,12 @@
 
 <script>
 (function() {
-    // ── Config (overwritten by configureScene from data.json) ──
-    let TOTAL_FRAMES    = 92;
-    let CARDS_START_FRAME = 50;
-    let CARDS_END_FRAME   = 80;
-    let carouselSpeedDeg  = 0.25;
-    let hologramType    = 'carousel';   // carousel | single_project | text | none
-    let hologramYOffset = 48;           // % of image height where hologram is centred
-    let hologramConfig  = {};           // full animation cfg passed to configureScene
-    let sceneEnabled    = true;
-
-    const LAYER1_PATH = i => `frames/layer1_frames/frame_${String(i).padStart(4,'0')}.png`;
-    const LAYER2_PATH = i => `frames/layer2_frames/frame_${String(i).padStart(4,'0')}.png`;
+    // ── Config ──
+    let carouselSpeedDeg = 0.25;
+    let hologramType     = 'carousel';
+    let hologramYOffset  = 48;
+    let hologramConfig   = {};
+    let sceneEnabled     = true;
 
     const canvas  = document.getElementById('frame-canvas');
     const ctx     = canvas.getContext('2d');
@@ -1357,16 +1474,20 @@
     const hint    = document.getElementById('scene-scroll-hint');
     const projBox = document.getElementById('scene-projects');
     const header  = document.getElementById('header');
+    const vidL1   = document.getElementById('vid-layer1');
+    const vidL2   = document.getElementById('vid-layer2');
 
-    let layer1Images = [];
-    let layer2Images = [];
+    let frames1 = [];   // ImageBitmap[] decoded from layer1
+    let frames2 = [];   // ImageBitmap[] decoded from layer2
+    let ready   = false;
     let currentFrameIdx = 0;
+
     let sceneProjectsBuilt = false;
     let sceneDone          = false;
     let carouselVisible    = false;
     let carouselAngle      = 0;
 
-    // ── Mouse/touch parallax + bubble ──
+    // ── Mouse/touch parallax ──
     let mtx = 0, mty = 0, mcx = 0, mcy = 0;
     let mx = window.innerWidth / 2, my = window.innerHeight / 2;
     let smx = mx, smy = my;
@@ -1405,66 +1526,65 @@
         const idleScale = 1.15 + Math.sin(t * 0.41) * 0.0038;
         const idleTiltX = Math.sin(t * 0.28) * 0.4;
 
-        const rotY  = mcx * 0.5 + idleTiltX;
+        const rotY   = mcx * 0.5 + idleTiltX;
         const transX = -mcx * 5;
         const transY = idleY - mcy * 5;
 
         canvas.style.transform =
             `perspective(1400px) rotateY(${rotY}deg) rotateX(0deg) ` +
             `translate(${transX}px, ${transY}px) scale(${idleScale})`;
-
         projBox.style.transform = `translate(${transX}px, ${transY}px) scale(${idleScale})`;
 
-        if (carouselVisible) {
-            carouselAngle += carouselSpeedDeg;
-            renderCarousel();
-        }
+        if (carouselVisible) { carouselAngle += carouselSpeedDeg; renderCarousel(); }
 
-        const img = layer1Images[currentFrameIdx];
-        if (img) {
-            canvas.width  = window.innerWidth;
-            canvas.height = window.innerHeight;
+        if (!ready || !frames1.length) return;
 
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        const frame1 = frames1[currentFrameIdx];
+        if (!frame1) return;
 
-            // Fit image
-            const ar = img.naturalWidth / img.naturalHeight;
-            let drawW, drawH;
-            if (canvas.width / canvas.height > ar) {
-                drawH = canvas.height; drawW = drawH * ar;
-            } else {
-                drawH = canvas.height * 0.85;
-                drawW = drawH * ar;
-                if (drawW < canvas.width) { drawW = canvas.width; drawH = drawW / ar; }
-            }
-            const drawX = (canvas.width - drawW) / 2;
-            const drawY = canvas.height - drawH;
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-            // Position hologram at hologramYOffset% of image height
-            const holY = drawY + drawH * (hologramYOffset / 100);
-            projBox.style.top    = `${holY}px`;
-            projBox.style.bottom = 'auto';
+        // Fit image: always fill full width
+        const ar = frame1.width / frame1.height;
+        let drawW = canvas.width;
+        let drawH = drawW / ar;
+        if (drawH < canvas.height) { drawH = canvas.height; drawW = drawH * ar; }
+        const drawX = (canvas.width  - drawW) / 2;
+        const drawY = (canvas.height - drawH) / 2;
 
-            ctx.drawImage(img, drawX, drawY, drawW, drawH);
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(frame1, drawX, drawY, drawW, drawH);
 
-            // Layer2 oil-bubble reveal
-            if (isHovering && layer2Images[currentFrameIdx]) {
+        // Update hologram Y position
+        const holY = drawY + drawH * (hologramYOffset / 100);
+        projBox.style.top    = `${holY}px`;
+        projBox.style.bottom = 'auto';
+
+        // Hacker bubble (layer 2) on hover
+        if (isHovering && frames2.length) {
+            const frame2 = frames2[Math.min(currentFrameIdx, frames2.length - 1)];
+            if (frame2) {
                 const numPoints = 8;
+                const baseRadius = Math.min(canvas.width, canvas.height) * 0.22;
                 const points = [];
-                const baseRadius = 240;
                 ctx.save();
                 for (let i = 0; i < numPoints; i++) {
                     const angle = (i / numPoints) * Math.PI * 2;
-                    const rOff  = Math.sin(t * 2.5 + i * 2) * 25 + Math.cos(t * 1.8 - i) * 15;
-                    points.push({ x: smx + Math.cos(angle) * (baseRadius + rOff),
-                                  y: smy + Math.sin(angle) * (baseRadius + rOff) });
+                    const rOff  = Math.sin(t * 2.5 + i * 2) * (baseRadius * 0.1)
+                                + Math.cos(t * 1.8 - i)     * (baseRadius * 0.06);
+                    points.push({
+                        x: smx + Math.cos(angle) * (baseRadius + rOff),
+                        y: smy + Math.sin(angle) * (baseRadius + rOff)
+                    });
                 }
                 ctx.beginPath();
                 for (let i = 0; i <= numPoints; i++) {
-                    const p1 = points[i % numPoints];
-                    const p2 = points[(i + 1) % numPoints];
-                    const mx2 = (p1.x + p2.x) / 2, my2 = (p1.y + p2.y) / 2;
+                    const p1  = points[i % numPoints];
+                    const p2  = points[(i + 1) % numPoints];
+                    const mx2 = (p1.x + p2.x) / 2;
+                    const my2 = (p1.y + p2.y) / 2;
                     if (i === 0) {
                         const lp = points[numPoints - 1];
                         ctx.moveTo((lp.x + p1.x) / 2, (lp.y + p1.y) / 2);
@@ -1475,12 +1595,160 @@
                 ctx.clip();
                 ctx.fillStyle = '#050507';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(layer2Images[currentFrameIdx], drawX, drawY, drawW, drawH);
+                ctx.drawImage(frame2, drawX, drawY, drawW, drawH);
                 ctx.restore();
             }
         }
     }
     requestAnimationFrame(rafLoop);
+
+    // ── Pre-decode video into ImageBitmap array ──
+    async function decodeVideo(vid, targetFps, onProgress) {
+        return new Promise((resolve, reject) => {
+            const bitmaps = [];
+            let isResolved = false;
+
+            const finish = () => {
+                if (isResolved) return;
+                isResolved = true;
+                vid.pause();
+                resolve(bitmaps);
+            };
+
+            // Watchdog: If nothing happens for 1.5 seconds, force finish
+            let watchdog;
+            const resetWatchdog = () => {
+                clearTimeout(watchdog);
+                watchdog = setTimeout(finish, 1500);
+            };
+            resetWatchdog();
+
+            if (typeof vid.requestVideoFrameCallback === 'function') {
+                vid.playbackRate = 16; // Fast forward
+                vid.muted = true;
+                vid.onended = finish;
+
+                const capture = async (now, meta) => {
+                    if (isResolved) return;
+                    resetWatchdog();
+                    try {
+                        const bmp = await createImageBitmap(vid);
+                        bitmaps.push(bmp);
+                        const pct = vid.duration ? (vid.currentTime / vid.duration) : 0;
+                        onProgress && onProgress(pct);
+                        
+                        if (vid.currentTime >= vid.duration - 0.05) {
+                            finish();
+                        } else {
+                            vid.requestVideoFrameCallback(capture);
+                        }
+                    } catch(e) { 
+                        vid.requestVideoFrameCallback(capture); // try next frame
+                    }
+                };
+
+                vid.play().then(() => {
+                    vid.requestVideoFrameCallback(capture);
+                }).catch(finish);
+
+            } else {
+                // Fallback: seek frame-by-frame
+                const fps = targetFps || 24;
+                vid.pause();
+                const duration = vid.duration || 1;
+                const totalFrames = Math.round(duration * fps);
+                let i = 0;
+
+                const seekNext = () => {
+                    if (isResolved) return;
+                    resetWatchdog();
+                    if (i >= totalFrames) { finish(); return; }
+                    
+                    vid.onseeked = async () => {
+                        if (isResolved) return;
+                        try {
+                            const bmp = await createImageBitmap(vid);
+                            bitmaps.push(bmp);
+                        } catch(e) {}
+                        onProgress && onProgress(i / totalFrames);
+                        i++;
+                        seekNext();
+                    };
+                    
+                    vid.currentTime = (i / totalFrames) * duration;
+                };
+                seekNext();
+            }
+        });
+    }
+
+    // ── Loading overlay ──
+    let loadOverlay = null;
+    function showLoadOverlay() {
+        loadOverlay = document.createElement('div');
+        loadOverlay.id = 'scene-load-overlay';
+        loadOverlay.style.cssText = [
+            'position:fixed;inset:0;background:#fff;z-index:9999',
+            'display:flex;flex-direction:column;align-items:center;justify-content:center',
+            'font-family:inherit;gap:18px;transition:opacity 0.5s'
+        ].join(';');
+        loadOverlay.innerHTML = `
+            <div style="font-size:13px;font-weight:600;letter-spacing:0.1em;color:#111;text-transform:uppercase">
+                Načítám animaci
+            </div>
+            <div style="width:220px;height:3px;background:#eee;border-radius:2px;overflow:hidden">
+                <div id="scene-load-bar" style="height:100%;background:#111;width:0%;border-radius:2px;transition:width 0.1s"></div>
+            </div>
+            <div id="scene-load-pct" style="font-size:12px;color:#888">0%</div>`;
+        document.body.appendChild(loadOverlay);
+    }
+    function updateLoadProgress(pct) {
+        const bar = document.getElementById('scene-load-bar');
+        const lbl = document.getElementById('scene-load-pct');
+        if (bar) bar.style.width = Math.round(pct * 100) + '%';
+        if (lbl) lbl.textContent = Math.round(pct * 100) + '%';
+    }
+    function hideLoadOverlay() {
+        if (!loadOverlay) return;
+        loadOverlay.style.opacity = '0';
+        setTimeout(() => loadOverlay && loadOverlay.remove(), 550);
+    }
+
+    // ── Main init: load + decode ──
+    async function initVideos(src1, src2) {
+        showLoadOverlay();
+
+        // Set sources
+        vidL1.src = src1;
+        vidL2.src = src2;
+
+        // Wait for metadata
+        await Promise.all([
+            new Promise(r => { if (vidL1.readyState >= 1) r(); else vidL1.onloadedmetadata = r; }),
+            new Promise(r => { if (vidL2.readyState >= 1) r(); else vidL2.onloadedmetadata = r; })
+        ]);
+
+        // Decode layer 1 (progress 0→0.5)
+        frames1 = await decodeVideo(vidL1, 30, p => updateLoadProgress(p * 0.5));
+
+        // Decode layer 2 (progress 0.5→1)
+        frames2 = await decodeVideo(vidL2, 30, p => updateLoadProgress(0.5 + p * 0.5));
+
+        // Resample layer2 to match layer1 count for clean index mapping
+        if (frames2.length && frames1.length && frames2.length !== frames1.length) {
+            const resampled = [];
+            for (let i = 0; i < frames1.length; i++) {
+                const srcIdx = Math.round((i / (frames1.length - 1)) * (frames2.length - 1));
+                resampled.push(frames2[Math.min(srcIdx, frames2.length - 1)]);
+            }
+            frames2 = resampled;
+        }
+
+        ready = true;
+        updateLoadProgress(1);
+        hideLoadOverlay();
+        onScroll(); // trigger first draw
+    }
 
     // ── 3D Mill carousel ──
     function renderCarousel() {
@@ -1490,7 +1758,6 @@
         const step = 360 / n;
         const isMobile = window.innerWidth < 768;
         const R = isMobile ? 120 : 200;
-
         cards.forEach((card, i) => {
             const ang = (carouselAngle + i * step) % 360;
             const rad = ang * Math.PI / 180;
@@ -1500,7 +1767,6 @@
             const base = isMobile ? 0.75 : 1.0;
             const sc  = base * (0.15 + tz * 0.85);
             const op  = tz > 0.3 ? Math.min(1, (tz - 0.3) * 1.4) : 0;
-
             card.style.transform     = `translateX(${x}px) translateZ(${z}px) scale(${sc})`;
             card.style.opacity       = op;
             card.style.zIndex        = Math.round(tz * 100);
@@ -1508,38 +1774,72 @@
         });
     }
 
-
-
-
-    // ── Frame preloading ──
-    function preloadFrames() {
-        layer1Images = new Array(TOTAL_FRAMES).fill(null);
-        layer2Images = new Array(TOTAL_FRAMES).fill(null);
-
-        const load = idx => {
-            const n1 = new Image(), n2 = new Image();
-            n1.src = LAYER1_PATH(idx);
-            n2.src = LAYER2_PATH(idx);
-            n1.onload = () => { layer1Images[idx] = n1; };
-            n2.onload = () => { layer2Images[idx] = n2; };
-        };
-        // Load first 5 immediately, rest with small delay to not block UI
-        for (let i = 1; i <= Math.min(5, TOTAL_FRAMES); i++) load(i);
-        for (let i = 6; i <= TOTAL_FRAMES; i++) {
-            const idx = i;
-            setTimeout(() => load(idx), (idx - 6) * 15);
+    // ── Build projects ──
+    window.buildSceneProjects = function(projects, animCfg) {
+        const cfg = Object.assign({}, hologramConfig, animCfg || {});
+        if (Array.isArray(animCfg)) cfg.selectedProjects = animCfg;
+        if (sceneProjectsBuilt) return;
+        sceneProjectsBuilt = true;
+        projBox.innerHTML = '';
+        const hType = cfg.hologramType || 'carousel';
+        if (hType === 'none') return;
+        if (hType === 'text') {
+            const card = document.createElement('div');
+            card.className = 'scene-holo-card scene-holo-text';
+            card.innerHTML = `<div class="sh-main">${cfg.hologramText || 'Hello World'}</div>
+                ${cfg.hologramSubtext ? `<div class="sh-sub">${cfg.hologramSubtext}</div>` : ''}`;
+            projBox.appendChild(card);
+            projBox.classList.add('visible');
+            return;
         }
-    }
+        if (hType === 'single_project') {
+            const p = (projects || []).find(x => x.id === cfg.singleProjectId) || (projects || [])[0];
+            if (!p) return;
+            const card = document.createElement('div');
+            card.className = 'scene-proj-card';
+            card.innerHTML = `<div class="sp-num">Projekt</div><div class="sp-title">${p.title || ''}</div>
+                ${(p.tags||[])[0] ? `<div class="sp-tag">${(p.tags||[])[0]}</div>` : ''}`;
+            card.addEventListener('click', () => {
+                window.scrollTo({ top: scene.offsetHeight, behavior:'smooth' });
+                setTimeout(() => { const el = document.getElementById(`project-${p.id}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }, 600);
+            });
+            projBox.appendChild(card); projBox.classList.add('visible'); return;
+        }
+        let toShow = projects || [];
+        const selIds = cfg.selectedProjects || [];
+        if (selIds.length > 0) {
+            const ordered = selIds.map(id => toShow.find(p => p.id === id)).filter(Boolean);
+            if (ordered.length > 0) toShow = ordered;
+        }
+        toShow = toShow.slice(0, 8);
+        if (!toShow.length) return;
+        toShow.forEach((p, i) => {
+            const a = document.createElement('a');
+            a.className = 'scene-proj-card'; a.href = `#project-${p.id}`;
+            a.innerHTML = `<div class="sp-num">Projekt ${String(i+1).padStart(2,'0')}</div>
+                <div class="sp-title">${p.title || ''}</div>
+                ${(p.tags||[])[0] ? `<div class="sp-tag">${(p.tags||[])[0]}</div>` : ''}`;
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                window.scrollTo({ top: scene.offsetHeight, behavior:'smooth' });
+                setTimeout(() => { const el = document.getElementById(`project-${p.id}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }, 600);
+            });
+            projBox.appendChild(a);
+        });
+        renderCarousel();
+    };
 
     // ── Scroll handler ──
     function lerp(a, b, t) { return a + (b - a) * t; }
 
-    // Derive start/end based on hologramType
     function getHologramRange() {
         const hType = hologramConfig.hologramType || 'carousel';
-        if (hType === 'single_project') return { s: hologramConfig.singleStart ?? 50, e: hologramConfig.singleEnd ?? 80 };
-        if (hType === 'text')           return { s: hologramConfig.textStart    ?? 50, e: hologramConfig.textEnd   ?? 80 };
-        return { s: CARDS_START_FRAME, e: CARDS_END_FRAME };
+        let sFrame, eFrame;
+        if (hType === 'single_project') { sFrame = hologramConfig.singleStart ?? 50; eFrame = hologramConfig.singleEnd ?? 80; }
+        else if (hType === 'text')      { sFrame = hologramConfig.textStart    ?? 50; eFrame = hologramConfig.textEnd   ?? 80; }
+        else                            { sFrame = hologramConfig.cardsStart   ?? 50; eFrame = hologramConfig.cardsEnd  ?? 80; }
+        const maxF = hologramConfig.totalFrames || 92;
+        return { s: sFrame / maxF, e: eFrame / maxF };
     }
 
     function onScroll() {
@@ -1548,9 +1848,14 @@
         const scrolled = Math.min(Math.max(-scene.getBoundingClientRect().top, 0), sceneH);
         const progress = sceneH > 0 ? scrolled / sceneH : 0;
 
-        currentFrameIdx = Math.min(Math.floor(progress * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
+        // Map scroll progress → frame index
+        if (frames1.length) {
+            currentFrameIdx = Math.min(
+                Math.floor(progress * frames1.length),
+                frames1.length - 1
+            );
+        }
 
-        // Background white → dark in last 35%
         const bgT = Math.max(0, Math.min(1, (progress - 0.65) / 0.35));
         document.getElementById('scene-bg').style.background =
             `rgb(${Math.round(lerp(255,5,bgT))},${Math.round(lerp(255,5,bgT))},${Math.round(lerp(255,7,bgT))})`;
@@ -1561,7 +1866,7 @@
         hint.style.opacity = Math.max(0, 1 - progress * 20);
 
         const { s, e } = getHologramRange();
-        const showHolo = currentFrameIdx >= s && currentFrameIdx <= e;
+        const showHolo = progress >= s && progress <= e;
         carouselVisible = showHolo;
         projBox.classList.toggle('visible', showHolo);
 
@@ -1575,7 +1880,7 @@
         }
     }
 
-    // ── Runtime config (called from data.json load) ──
+    // ── Runtime config ──
     window.configureScene = function(cfg) {
         if (!cfg) return;
         if (cfg.enabled === false) {
@@ -1590,107 +1895,33 @@
             header.classList.remove('scene-light');
             return;
         }
-        if (cfg.scrollHeight)  scene.style.height = cfg.scrollHeight + 'vh';
-        if (typeof cfg.totalFrames   === 'number') TOTAL_FRAMES     = cfg.totalFrames;
-        if (typeof cfg.cardsStart    === 'number') CARDS_START_FRAME = cfg.cardsStart;
-        if (typeof cfg.cardsEnd      === 'number') CARDS_END_FRAME   = cfg.cardsEnd;
-        if (typeof cfg.carouselSpeed === 'number') carouselSpeedDeg  = cfg.carouselSpeed;
-        if (cfg.hologramType)                      hologramType      = cfg.hologramType;
+        if (cfg.scrollHeight) scene.style.height = cfg.scrollHeight + 'vh';
+        if (typeof cfg.carouselSpeed  === 'number') carouselSpeedDeg = cfg.carouselSpeed;
+        if (cfg.hologramType)                       hologramType     = cfg.hologramType;
         if (typeof cfg.hologramYOffset === 'number') hologramYOffset = cfg.hologramYOffset;
         hologramConfig = cfg;
 
-        preloadFrames(); // re-init with correct TOTAL_FRAMES
+        const src1 = cfg.layer1Video ? `frames/${cfg.layer1Video}` : 'frames/1.mp4';
+        const src2 = cfg.layer2Video ? `frames/${cfg.layer2Video}` : 'frames/2.mp4';
+        initVideos(src1, src2);
     };
 
-    // ── Build projects: outer wrapper (called from init with full data.animation cfg) ──
-    window.buildSceneProjects = function(projects, animCfg) {
-        // animCfg is data.animation (full cfg object passed from index init)
-        const cfg = Object.assign({}, hologramConfig, animCfg || {});
-        // merge selectedProjects from animCfg if it's an array (old API compat)
-        if (Array.isArray(animCfg)) cfg.selectedProjects = animCfg;
-
-        if (sceneProjectsBuilt) return;
-        sceneProjectsBuilt = true;
-        projBox.innerHTML = '';
-
-        const hType = cfg.hologramType || 'carousel';
-
-        if (hType === 'none') return;
-
-        if (hType === 'text') {
-            const card = document.createElement('div');
-            card.className = 'scene-holo-card scene-holo-text';
-            card.innerHTML = `
-                <div class="sh-main">${cfg.hologramText || 'Hello World'}</div>
-                ${cfg.hologramSubtext ? `<div class="sh-sub">${cfg.hologramSubtext}</div>` : ''}`;
-            projBox.appendChild(card);
-            projBox.classList.add('visible');
-            return;
-        }
-
-        if (hType === 'single_project') {
-            const p = (projects || []).find(x => x.id === cfg.singleProjectId) || (projects || [])[0];
-            if (!p) return;
-            const card = document.createElement('div');
-            card.className = 'scene-proj-card';
-            card.innerHTML = `
-                <div class="sp-num">Projekt</div>
-                <div class="sp-title">${p.title || ''}</div>
-                ${(p.tags||[])[0] ? `<div class="sp-tag">${(p.tags||[])[0]}</div>` : ''}`;
-            card.addEventListener('click', () => {
-                window.scrollTo({ top: scene.offsetHeight, behavior:'smooth' });
-                setTimeout(() => { const el = document.getElementById(`project-${p.id}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }, 600);
-            });
-            projBox.appendChild(card);
-            projBox.classList.add('visible');
-            return;
-        }
-
-        // Default: carousel
-        let toShow = projects || [];
-        const selIds = cfg.selectedProjects || [];
-        if (selIds.length > 0) {
-            const ordered = selIds.map(id => toShow.find(p => p.id === id)).filter(Boolean);
-            if (ordered.length > 0) toShow = ordered;
-        }
-        toShow = toShow.slice(0, 8);
-        if (!toShow.length) return;
-
-        toShow.forEach((p, i) => {
-            const a = document.createElement('a');
-            a.className = 'scene-proj-card';
-            a.href = `#project-${p.id}`;
-            a.innerHTML = `
-                <div class="sp-num">Projekt ${String(i+1).padStart(2,'0')}</div>
-                <div class="sp-title">${p.title || ''}</div>
-                ${(p.tags||[])[0] ? `<div class="sp-tag">${(p.tags||[])[0]}</div>` : ''}`;
-            a.addEventListener('click', e => {
-                e.preventDefault();
-                window.scrollTo({ top: scene.offsetHeight, behavior:'smooth' });
-                setTimeout(() => { const el = document.getElementById(`project-${p.id}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }, 600);
-            });
-            projBox.appendChild(a);
-        });
-
-        renderCarousel();
-    };
-
-    // ── Init ──
     document.body.classList.add('scene-active');
     header.classList.add('scene-light');
-    // preloadFrames() called from configureScene after totalFrames is set
-    // But if no config arrives, load with default 92
-    setTimeout(() => { if (!layer1Images.length) preloadFrames(); }, 800);
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-        const p = Math.max(0, Math.min(1, (-scene.getBoundingClientRect().top) / (scene.offsetHeight - window.innerHeight)));
-        currentFrameIdx = Math.min(Math.floor(p * (TOTAL_FRAMES - 1)), TOTAL_FRAMES - 1);
-    });
-    onScroll();
+    window.addEventListener('resize', onScroll);
+
+    // Fallback: start with defaults if configureScene never called
+    setTimeout(() => {
+        if (!ready && !vidL1.src) {
+            initVideos('frames/1.mp4', 'frames/2.mp4');
+        }
+    }, 1000);
 })();
 </script>
 <!-- ═══ END FRAME SCENE JS ═══ -->
+
 
 </body>
 </html>
