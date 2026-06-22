@@ -40,6 +40,8 @@
   },
   "animation": {
     "enabled": true,
+    "animationMode": "frames",
+    "totalFrames": 92,
     "scrollHeight": 275,
     "hologramType": "carousel",
     "layer1Video": "1.mp4",
