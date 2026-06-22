@@ -40,7 +40,10 @@
   },
   "animation": {
     "enabled": true,
-    "scrollHeight": 250,
+    "totalFrames": 92,
+    "scrollHeight": 275,
+    "hologramType": "carousel",
+    "hologramYOffset": 63,
     "cardsStart": 50,
     "cardsEnd": 92,
     "carouselSpeed": 0.25,
@@ -48,7 +51,14 @@
       "proj-6",
       "proj-7",
       "proj-1782085152332"
-    ]
+    ],
+    "singleProjectId": "",
+    "singleStart": 50,
+    "singleEnd": 80,
+    "hologramText": "",
+    "hologramSubtext": "",
+    "textStart": 50,
+    "textEnd": 80
   },
   "socials": [
     {
