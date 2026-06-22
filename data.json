@@ -42,6 +42,9 @@
     "enabled": true,
     "animationMode": "frames",
     "totalFrames": 92,
+    "frameScale": 1,
+    "frameMobileScale": 1,
+    "cacheVersion": "1782167246277",
     "scrollHeight": 275,
     "hologramType": "carousel",
     "layer1Video": "1.mp4",
@@ -209,6 +212,21 @@
       "id": "img-17820833877230.8796147117831346",
       "src": "photos/profile picture.png",
       "caption": ""
+    },
+    {
+      "id": "img-17821671960850.26146581490935095",
+      "src": "photos/467100318_597722279260835_5478618375895695662_n.gif",
+      "caption": ""
+    },
+    {
+      "id": "img-17821672289850.9306477359358475",
+      "src": "photos/PORTFOLIO OG OBRAZEK.png",
+      "caption": ""
+    },
+    {
+      "id": "img-17821672409440.7516632130843469",
+      "src": "photos/github profile picture.png",
+      "caption": ""
     }
   ],
   "sections": {
@@ -223,5 +241,6 @@
       "enabled": false,
       "username": ""
     }
-  }
+  },
+  "galleryLayout": "dynamic"
 }
