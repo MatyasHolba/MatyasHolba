@@ -42,7 +42,13 @@
     "enabled": true,
     "scrollHeight": 250,
     "cardsStart": 50,
-    "cardsEnd": 80
+    "cardsEnd": 92,
+    "carouselSpeed": 0.25,
+    "selectedProjects": [
+      "proj-6",
+      "proj-7",
+      "proj-1782085152332"
+    ]
   },
   "socials": [
     {
