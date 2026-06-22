@@ -1461,6 +1461,7 @@
 
 <script>
 (function() {
+    let configureSceneCalled = false;
     // Disable browser scroll restoration to prevent jumps and desynchronization on reload
     if ('scrollRestoration' in history) {
         history.scrollRestoration = 'manual';
@@ -1773,11 +1774,28 @@
         const totalFrames = cfg.totalFrames || 93;
 
         if (mode === 'frames') {
-            // Load Normal Frames (progress 0→0.5)
-            frames1 = await loadFrameImages(1, totalFrames, p => updateLoadProgress(p * 0.5));
+            let loaded1 = 0;
+            let loaded2 = 0;
+            const total = totalFrames * 2;
+            
+            const updateOverallProgress = () => {
+                const totalLoaded = loaded1 + loaded2;
+                updateLoadProgress(totalLoaded / total);
+            };
 
-            // Load Hacker Frames (progress 0.5→1)
-            frames2 = await loadFrameImages(2, totalFrames, p => updateLoadProgress(0.5 + p * 0.5));
+            const [f1, f2] = await Promise.all([
+                loadFrameImages(1, totalFrames, p => {
+                    loaded1 = Math.round(p * totalFrames);
+                    updateOverallProgress();
+                }),
+                loadFrameImages(2, totalFrames, p => {
+                    loaded2 = Math.round(p * totalFrames);
+                    updateOverallProgress();
+                })
+            ]);
+            
+            frames1 = f1;
+            frames2 = f2;
         } else {
             // Set sources
             const src1 = cfg.layer1Video ? `frames/${cfg.layer1Video}` : 'frames/1.mp4';
@@ -1960,6 +1978,7 @@
 
     // ── Runtime config ──
     window.configureScene = function(cfg) {
+        configureSceneCalled = true;
         if (!cfg) return;
         if (cfg.enabled === false) {
             sceneEnabled = false;
@@ -1995,10 +2014,10 @@
 
     // Fallback: start with defaults if configureScene never called
     setTimeout(() => {
-        if (!ready && !vidL1.src) {
+        if (!configureSceneCalled && !ready) {
             initAnimation({ animationMode: 'mp4', layer1Video: '1.mp4', layer2Video: '2.mp4' });
         }
-    }, 1000);
+    }, 3000);
 })();
 </script>
 <!-- ═══ END FRAME SCENE JS ═══ -->
