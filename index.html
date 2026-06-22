@@ -1315,8 +1315,8 @@
 <script>
 (function() {
     const TOTAL_FRAMES = 92;
-    const N_FRAME_PATH = i => `frames/NORMAL_frames/frame_${String(i).padStart(4,'0')}.png`;
-    const H_FRAME_PATH = i => `frames/HACKER_frames/frame_${String(i).padStart(4,'0')}.png`;
+    const LAYER1_PATH = i => `frames/layer1_frames/frame_${String(i).padStart(4,'0')}.png`;
+    const LAYER2_PATH = i => `frames/layer2_frames/frame_${String(i).padStart(4,'0')}.png`;
 
     // Configurable via window.configureScene()
     let CARDS_START_FRAME  = 50;
@@ -1332,8 +1332,8 @@
     const projBox  = document.getElementById('scene-projects');
     const header   = document.getElementById('header');
 
-    const normalImages = new Array(TOTAL_FRAMES).fill(null);
-    const hackerImages = new Array(TOTAL_FRAMES).fill(null);
+    const layer1Images = new Array(TOTAL_FRAMES).fill(null);
+    const layer2Images = new Array(TOTAL_FRAMES).fill(null);
     let currentFrameIdx = 0;
     let sceneProjectsBuilt = false;
     let sceneDone          = false;
@@ -1418,8 +1418,8 @@
         }
 
         // Draw Canvas (Normal + Hacker Bubble)
-        if (normalImages[currentFrameIdx]) {
-            const img = normalImages[currentFrameIdx];
+        if (layer1Images[currentFrameIdx]) {
+            const img = layer1Images[currentFrameIdx];
             
             // Explicitly set canvas internal resolution to viewport
             canvas.width = window.innerWidth;
@@ -1456,7 +1456,7 @@
             ctx.drawImage(img, drawX, drawY, drawW, drawH);
 
             // Draw hacker inside bubble ONLY if mouse is over scene
-            if (isHovering && hackerImages[currentFrameIdx]) {
+            if (isHovering && layer2Images[currentFrameIdx]) {
                 const maskX = smx;
                 const maskY = smy;
 
@@ -1492,7 +1492,7 @@
                 ctx.fillStyle = '#050507';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 
-                ctx.drawImage(hackerImages[currentFrameIdx], drawX, drawY, drawW, drawH);
+                ctx.drawImage(layer2Images[currentFrameIdx], drawX, drawY, drawW, drawH);
                 ctx.restore();
             }
         }
@@ -1532,17 +1532,20 @@
     }
 
     // ── Frame preloading ──────────────────────────────────
-    function preloadFrames() {
+        function preloadFrames() {
         const load = idx => {
             const nImg = new Image();
             const hImg = new Image();
-            let loaded = 0;
-            const onload = () => {
-                loaded++;
-                if (loaded === 2) {
-                    normalImages[idx-1] = nImg;
-                    hackerImages[idx-1] = hImg;
-                }
+            nImg.src = LAYER1_PATH(idx);
+            hImg.src = LAYER2_PATH(idx);
+            
+            nImg.onload = () => { layer1Images[idx] = nImg; checkDone(); };
+            hImg.onload = () => { layer2Images[idx] = hImg; checkDone(); };
+        };
+        let loaded = 0;
+        const checkDone = () => { loaded++; if (loaded === TOTAL_FRAMES * 2) { sceneProjectsBuilt = true; } };
+        for (let i=1; i<=TOTAL_FRAMES; i++) load(i);
+    }
             };
             nImg.onload = onload;
             hImg.onload = onload;
