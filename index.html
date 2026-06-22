@@ -159,6 +159,39 @@
             background: rgba(123,123,255,0.08);
         }
 
+        /* Lando Norris Text Effect for Navigation Links */
+        .nav-links a.lando-link {
+            display: inline-flex;
+            overflow: hidden;
+            position: relative;
+            line-height: 1.2;
+        }
+
+        .nav-links a.lando-link .letter-container {
+            display: inline-block;
+            position: relative;
+        }
+
+        .nav-links a.lando-link .letter-container span {
+            display: inline-block;
+            transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
+            transition-delay: var(--delay);
+        }
+
+        .nav-links a.lando-link .letter-container .letter-bottom {
+            position: absolute;
+            left: 0;
+            top: 150%;
+        }
+
+        .nav-links a.lando-link:hover .letter-top {
+            transform: translateY(-150%);
+        }
+
+        .nav-links a.lando-link:hover .letter-bottom {
+            transform: translateY(-150%);
+        }
+
         /* ── Main ── */
         main {
             max-width: 860px;
@@ -557,6 +590,105 @@
             font-size: 13px;
             padding: 32px 0;
             font-style: italic;
+        }
+
+        /* ── Dynamic Gallery (Rows + Columns) ── */
+        .gallery-dynamic {
+            width: 100%;
+            height: calc(var(--row-count, 3) * 233px);
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .gallery-dynamic .row {
+            flex: 1;
+            display: flex;
+            transition: flex 0.6s cubic-bezier(0.25, 1, 0.3, 1);
+            min-height: 0;
+        }
+
+        .gallery-dynamic:hover .row {
+            flex: 0.7;
+        }
+        .gallery-dynamic .row:hover {
+            flex: 2.2;
+        }
+
+        .gallery-dynamic .cell {
+            flex: 1;
+            padding: 8px;
+            transition: flex-grow 0.5s cubic-bezier(0.25, 1, 0.3, 1);
+            min-width: 0;
+        }
+
+        .gallery-dynamic .row:hover .cell:hover {
+            flex-grow: 3;
+        }
+
+        .gallery-dynamic .card {
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gallery-dynamic .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-dynamic .cell:hover img {
+            transform: scale(1.07);
+        }
+
+        .gallery-dynamic .caption {
+            position: absolute;
+            bottom: 18px;
+            left: 18px;
+            color: white;
+            font-weight: bold;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: 0.4s ease;
+            z-index: 2;
+        }
+
+        .gallery-dynamic .cell:hover .caption {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gallery-dynamic .card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+            opacity: 0;
+            transition: 0.4s;
+            z-index: 1;
+        }
+
+        .gallery-dynamic .cell:hover .card::after {
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .gallery-dynamic {
+                height: calc(var(--row-count, 3) * 166px);
+            }
+            .gallery-dynamic .card {
+                border-radius: 12px;
+            }
+            .gallery-dynamic .caption {
+                font-size: 12px;
+                bottom: 10px;
+                left: 10px;
+            }
         }
 
         /* ── Lightbox ── */
@@ -1177,7 +1309,32 @@
         (data.meta.navLinks || []).forEach(link => {
             const a = document.createElement('a');
             a.href = link.href;
-            a.textContent = link.label;
+            
+            // Apply Lando Norris Text Effect
+            const text = link.label || '';
+            a.setAttribute('aria-label', text);
+            a.classList.add('lando-link');
+            
+            const segmenter = new Intl.Segmenter('cs', { granularity: 'grapheme' });
+            const segments = Array.from(segmenter.segment(text)).map(s => s.segment);
+            
+            segments.forEach((char, index) => {
+                const container = document.createElement('span');
+                container.className = 'letter-container';
+                container.style.setProperty('--delay', `${index * 0.03}s`);
+                
+                const top = document.createElement('span');
+                top.className = 'letter-top';
+                top.textContent = char === ' ' ? '\u00A0' : char;
+                
+                const bottom = document.createElement('span');
+                bottom.className = 'letter-bottom';
+                bottom.textContent = char === ' ' ? '\u00A0' : char;
+                
+                container.appendChild(top);
+                container.appendChild(bottom);
+                a.appendChild(container);
+            });
             navLinks.appendChild(a);
         });
     }
@@ -1286,20 +1443,68 @@
             grid.innerHTML = '<p class="gallery-empty">Galerie bude brzy doplněna.</p>';
             return;
         }
-        data.gallery.forEach(img => {
-            const item = document.createElement('div');
-            item.className = 'gallery-item';
-            item.setAttribute('data-caption', img.caption || '');
-            item.setAttribute('data-src', img.src);
-            item.setAttribute('role', 'button');
-            item.setAttribute('tabindex', '0');
-            item.innerHTML = `<img src="${img.src}" alt="${img.caption || ''}" loading="lazy">`;
-            item.addEventListener('click', () => openLightbox(img.src, img.caption));
-            item.addEventListener('keydown', e => {
-                if (e.key === 'Enter') openLightbox(img.src, img.caption);
+
+        const layout = data.galleryLayout || 'default';
+
+        if (layout === 'dynamic') {
+            grid.className = 'gallery-dynamic';
+            
+            const items = data.gallery;
+            grid.style.setProperty('--row-count', Math.ceil(items.length / 3));
+            const rowSize = 3;
+            for (let i = 0; i < items.length; i += rowSize) {
+                const rowItems = items.slice(i, i + rowSize);
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'row';
+                
+                rowItems.forEach(img => {
+                    const cellDiv = document.createElement('div');
+                    cellDiv.className = 'cell';
+                    
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'card';
+                    
+                    const image = document.createElement('img');
+                    image.src = img.src;
+                    image.alt = img.caption || '';
+                    image.loading = 'lazy';
+                    
+                    const captionDiv = document.createElement('div');
+                    captionDiv.className = 'caption';
+                    captionDiv.textContent = img.caption || '';
+                    
+                    cardDiv.appendChild(image);
+                    cardDiv.appendChild(captionDiv);
+                    
+                    cardDiv.addEventListener('click', () => openLightbox(img.src, img.caption));
+                    cardDiv.setAttribute('role', 'button');
+                    cardDiv.setAttribute('tabindex', '0');
+                    cardDiv.addEventListener('keydown', e => {
+                        if (e.key === 'Enter') openLightbox(img.src, img.caption);
+                    });
+                    
+                    cellDiv.appendChild(cardDiv);
+                    rowDiv.appendChild(cellDiv);
+                });
+                grid.appendChild(rowDiv);
+            }
+        } else {
+            grid.className = 'gallery-grid';
+            data.gallery.forEach(img => {
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.setAttribute('data-caption', img.caption || '');
+                item.setAttribute('data-src', img.src);
+                item.setAttribute('role', 'button');
+                item.setAttribute('tabindex', '0');
+                item.innerHTML = `<img src="${img.src}" alt="${img.caption || ''}" loading="lazy">`;
+                item.addEventListener('click', () => openLightbox(img.src, img.caption));
+                item.addEventListener('keydown', e => {
+                    if (e.key === 'Enter') openLightbox(img.src, img.caption);
+                });
+                grid.appendChild(item);
             });
-            grid.appendChild(item);
-        });
+        }
     }
 
     function renderFooter(data) {
@@ -1560,6 +1765,16 @@
         let drawW = canvas.width;
         let drawH = drawW / ar;
         if (drawH < canvas.height) { drawH = canvas.height; drawW = drawH * ar; }
+
+        // Apply custom zoom/scale based on config
+        const isMobile = window.innerWidth < 768;
+        const scale = isMobile 
+            ? (hologramConfig.frameMobileScale !== undefined ? parseFloat(hologramConfig.frameMobileScale) : 1.0) 
+            : (hologramConfig.frameScale !== undefined ? parseFloat(hologramConfig.frameScale) : 1.0);
+        
+        drawW = drawW * scale;
+        drawH = drawH * scale;
+
         const drawX = (canvas.width  - drawW) / 2;
         const drawY = (canvas.height - drawH) / 2;
 
@@ -1727,10 +1942,17 @@
     }
 
     // ── Main init: load + decode ──
-    async function loadFrameImages(layer, totalFrames, onProgress) {
+    async function loadFrameImages(layer, totalFrames, onProgress, cacheVersion = 'default') {
         const folderName = layer === 1 ? 'first_layer' : 'second_layer';
         const bitmaps = new Array(totalFrames);
         let loaded = 0;
+
+        let cache = null;
+        try {
+            cache = await caches.open('frames-cache-' + cacheVersion);
+        } catch (e) {
+            console.warn('Cache Storage not available:', e);
+        }
 
         return new Promise((resolve) => {
             const checkDone = () => {
@@ -1740,29 +1962,59 @@
             };
 
             for (let i = 0; i < totalFrames; i++) {
-                const img = new Image();
                 const frameName = 'frame_' + String(i).padStart(4, '0') + '.png';
-                
-                img.onload = async () => {
-                    try {
-                        const bmp = await createImageBitmap(img);
-                        bitmaps[i] = bmp;
-                    } catch (e) {
-                        bitmaps[i] = img;
+                const url = `frames/${folderName}/${frameName}`;
+
+                const loadSingle = async () => {
+                    let blob = null;
+                    if (cache) {
+                        try {
+                            const cachedResponse = await cache.match(url);
+                            if (cachedResponse) {
+                                blob = await cachedResponse.blob();
+                            }
+                        } catch (e) {
+                            console.warn('Cache read error:', e);
+                        }
                     }
-                    loaded++;
-                    onProgress && onProgress(loaded / totalFrames);
-                    checkDone();
+
+                    const img = new Image();
+
+                    img.onload = async () => {
+                        try {
+                            const bmp = await createImageBitmap(img);
+                            bitmaps[i] = bmp;
+                        } catch (e) {
+                            bitmaps[i] = img;
+                        }
+                        if (blob) {
+                            URL.revokeObjectURL(img.src);
+                        }
+                        loaded++;
+                        onProgress && onProgress(loaded / totalFrames);
+                        checkDone();
+                    };
+
+                    img.onerror = () => {
+                        bitmaps[i] = null;
+                        loaded++;
+                        onProgress && onProgress(loaded / totalFrames);
+                        checkDone();
+                    };
+
+                    if (blob) {
+                        img.src = URL.createObjectURL(blob);
+                    } else {
+                        img.src = url;
+                        if (cache) {
+                            fetch(url).then(res => {
+                                if (res.ok) cache.put(url, res.clone());
+                            }).catch(() => {});
+                        }
+                    }
                 };
 
-                img.onerror = () => {
-                    bitmaps[i] = null;
-                    loaded++;
-                    onProgress && onProgress(loaded / totalFrames);
-                    checkDone();
-                };
-
-                img.src = `frames/${folderName}/${frameName}`;
+                loadSingle();
             }
         });
     }
@@ -1772,6 +2024,19 @@
 
         const mode = cfg.animationMode || 'mp4';
         const totalFrames = cfg.totalFrames || 93;
+        const cacheVersion = cfg.cacheVersion || 'default';
+
+        // Clear old caches if version mismatch
+        try {
+            const keys = await caches.keys();
+            for (const key of keys) {
+                if (key.startsWith('frames-cache-') && key !== `frames-cache-${cacheVersion}`) {
+                    await caches.delete(key);
+                }
+            }
+        } catch (e) {
+            console.warn('Failed to clear old caches:', e);
+        }
 
         if (mode === 'frames') {
             let loaded1 = 0;
@@ -1787,11 +2052,11 @@
                 loadFrameImages(1, totalFrames, p => {
                     loaded1 = Math.round(p * totalFrames);
                     updateOverallProgress();
-                }),
+                }, cacheVersion),
                 loadFrameImages(2, totalFrames, p => {
                     loaded2 = Math.round(p * totalFrames);
                     updateOverallProgress();
-                })
+                }, cacheVersion)
             ]);
             
             frames1 = f1;
