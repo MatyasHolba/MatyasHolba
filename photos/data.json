@@ -1,0 +1,207 @@
+{
+  "meta": {
+    "name": "MH",
+    "initials": "MH",
+    "motto": "Stavím vlastní nástroje, učím se nové technologie a posouvám své limity každý den.",
+    "bio": "Jsem student se silným zájmem o programování, vývoj softwaru, automatizaci a kybernetickou bezpečnost. Rád vytvářím vlastní projekty a učím se nové technologie samostatně. Baví mě hledat vlastní řešení místo spoléhání na existující placené nástroje.",
+    "location": "Česká republika",
+    "copyright": "2026",
+    "accentColor": "#ffffff",
+    "og": {
+      "title": "MH — Portfolio",
+      "description": "Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.",
+      "image": "https://matyasholba.github.io/MatyasHolba/og-image.png",
+      "url": "https://matyasholba.github.io/MatyasHolba/",
+      "siteName": "MH Portfolio",
+      "favicon": "favicon.png"
+    },
+    "navLinks": [
+      {
+        "label": "O mně",
+        "href": "#about"
+      },
+      {
+        "label": "Projekty",
+        "href": "#projects"
+      },
+      {
+        "label": "Feed",
+        "href": "#feed"
+      },
+      {
+        "label": "Galerie",
+        "href": "#gallery"
+      },
+      {
+        "label": "Kontakt",
+        "href": "#links"
+      }
+    ]
+  },
+  "socials": [
+    {
+      "id": "social-1",
+      "label": "GitHub",
+      "url": "https://github.com/MatyasHolba",
+      "icon": "github"
+    },
+    {
+      "id": "social-2",
+      "label": "Instagram",
+      "url": "https://www.instagram.com/matyas.holba",
+      "icon": "instagram"
+    },
+    {
+      "id": "social-3",
+      "label": "Email",
+      "url": "mailto:you@example.com",
+      "icon": "mail"
+    }
+  ],
+  "techStack": [
+    "Python",
+    "Flutter",
+    "Dart",
+    "Android Studio",
+    "HTML / CSS / JS",
+    "Blender",
+    "Chrome Extensions"
+  ],
+  "goals": [
+    "Stát se etickým hackerem.",
+    "Budovat vlastní znalosti v oblasti kybernetické bezpečnosti.",
+    "Vytvořit vlastní firmu zaměřenou na technologie a software.",
+    "Vyvíjet aplikace, které pomáhají lidem řešit reálné problémy.",
+    "Neustále se učit nové technologie a zdokonalovat své dovednosti."
+  ],
+  "projects": [
+    {
+      "id": "proj-1",
+      "title": "Vlastní futuristický panel pro Windows",
+      "description": "Plně přizpůsobitelný systémový panel s moderním designem a inteligentními funkcemi.",
+      "features": [
+        "RGB a moderní vzhled.",
+        "Přizpůsobitelný design.",
+        "Klávesové zkratky.",
+        "Automatické přizpůsobení barev podle aktivní aplikace."
+      ],
+      "tags": [
+        "Python",
+        "Windows API"
+      ],
+      "link": "",
+      "status": "active"
+    },
+    {
+      "id": "proj-2",
+      "title": "Vizuální plánovač ve stylu myšlenkové mapy",
+      "description": "Interaktivní nástroj pro organizaci myšlenek a projektů s vizuálním stromem.",
+      "features": [
+        "Převod textu na vizuální strom.",
+        "Správa úkolů.",
+        "Poznámky a přílohy.",
+        "Moderní interaktivní rozhraní."
+      ],
+      "tags": [
+        "Flutter",
+        "Dart"
+      ],
+      "link": "",
+      "status": "active"
+    },
+    {
+      "id": "proj-3",
+      "title": "Nástroj pro OCR dlouhých screenshotů",
+      "description": "Automatizovaný OCR nástroj pro extrakci textu z dlouhých screenshotů.",
+      "features": [
+        "Automatické rozdělení obrázků.",
+        "Převod textu pomocí OCR.",
+        "Možnost oprav a exportu."
+      ],
+      "tags": [
+        "Python",
+        "OCR"
+      ],
+      "link": "",
+      "status": "active"
+    },
+    {
+      "id": "proj-4",
+      "title": "Vlastní jazykové rozšíření do prohlížeče",
+      "description": "Chrome rozšíření pro interaktivní učení jazyků při procházení webu.",
+      "features": [
+        "Inspirace nástroji Relingo, Language Reactor a eLang.",
+        "Učení jazyků při sledování videí a čtení textů."
+      ],
+      "tags": [
+        "Chrome Extensions",
+        "JavaScript"
+      ],
+      "link": "",
+      "status": "active"
+    },
+    {
+      "id": "proj-5",
+      "title": "Rozšíření pro převod PDF do dark modu",
+      "description": "Chrome rozšíření pro konverzi PDF dokumentů do dark mode.",
+      "features": [
+        "Generování nového PDF.",
+        "Pokročilé nastavení barev.",
+        "Automatická správa dočasných souborů."
+      ],
+      "tags": [
+        "Chrome Extensions",
+        "PDF"
+      ],
+      "link": "",
+      "status": "active"
+    },
+    {
+      "id": "proj-6",
+      "title": "Systém blokování aplikací",
+      "description": "Produktivitní nástroj pro kontrolu přístupu ke hrám a aplikacím.",
+      "features": [
+        "Časové omezení přístupu ke hrám a programům.",
+        "Zaměření na produktivitu.",
+        "Nemožnost obejití během aktivní blokace."
+      ],
+      "tags": [
+        "Python",
+        "Windows"
+      ],
+      "link": "",
+      "status": "active"
+    },
+    {
+      "id": "proj-7",
+      "title": "Nástroj pro sledování herních tržišť",
+      "description": "Python aplikace pro analýzu a porovnávání cen na herních tržištích.",
+      "features": [
+        "Analýza cen a porovnávání více tržišť.",
+        "Vyhledávání zajímavých nabídek.",
+        "Python aplikace."
+      ],
+      "tags": [
+        "Python",
+        "Scraping"
+      ],
+      "link": "",
+      "status": "active"
+    }
+  ],
+  "feed": [
+    {
+      "id": "feed-1",
+      "date": "21. června 2026",
+      "text": "Spuštěna nová verze osobního webu. Kompletní přechod na vlastní platformu, kde platí moje pravidla a čistý design bez algoritmů.",
+      "photo": ""
+    },
+    {
+      "id": "feed-2",
+      "date": "Nedávno",
+      "text": "Pracuji na optimalizaci mých stávajících skriptů a integraci nových AI postupů do měsíčních mini-projektů. Autonomie ve vývoji je pro mě klíčová.",
+      "photo": ""
+    }
+  ],
+  "gallery": []
+}
