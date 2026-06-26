@@ -1,62 +1,17 @@
 {
-  "meta": {
-    "name": "MH Portfolio",
-    "initials": "MH",
-    "motto": "Stavím vlastní nástroje, učím se nové technologie a posouvám své limity každý den.",
-    "bio": "Ahoj, jmenuji se Matyas Holba 👋\nJsem student se silným zájmem o programování, vývoj softwaru, automatizaci a kybernetickou bezpečnost. Rád vytvářím vlastní projekty a učím se nové technologie samostatně. Baví mě hledat vlastní řešení místo spoléhání na existující placené nástroje.",
-    "location": "Česká republika",
-    "copyright": "2026",
-    "accentColor": "#ffffff",
-    "og": {
-      "title": "MH — Portfolio",
-      "description": "Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.",
-      "image": "https://matyasholba.github.io/MatyasHolba/og-image.png",
-      "url": "https://matyasholba.github.io/MatyasHolba/",
-      "siteName": "MH Portfolio",
-      "favicon": "favicon.png"
-    },
-    "navLinks": [
-      {
-        "label": "O mně",
-        "href": "#about"
-      },
-      {
-        "label": "Projekty",
-        "href": "#projects"
-      },
-      {
-        "label": "Feed",
-        "href": "#feed"
-      },
-      {
-        "label": "Galerie",
-        "href": "#gallery"
-      },
-      {
-        "label": "Kontakt",
-        "href": "#links"
-      }
-    ]
-  },
   "animation": {
     "enabled": true,
-    "animationMode": "frames",
-    "totalFrames": 92,
-    "frameScale": 1,
-    "frameMobileScale": 1,
-    "cacheVersion": "1782167246277",
-    "scrollHeight": 275,
+    "scrollHeight": 175,
     "hologramType": "carousel",
-    "layer1Video": "1.mp4",
-    "layer2Video": "2.mp4",
+    "layer1Video": "1.webm",
+    "layer2Video": "2.webm",
     "hologramYOffset": 63,
     "cardsStart": 50,
     "cardsEnd": 92,
     "carouselSpeed": 0.25,
     "selectedProjects": [
-      "proj-6",
-      "proj-7",
-      "proj-1782085152332"
+      "proj-1782085152332",
+      "proj-6"
     ],
     "singleProjectId": "",
     "singleStart": 50,
@@ -66,18 +21,345 @@
     "textStart": 50,
     "textEnd": 80
   },
-  "socials": [
+  "feed": [
     {
-      "id": "social-1",
-      "label": "GitHub",
-      "url": "https://github.com/MatyasHolba",
-      "icon": "github"
+      "date": "21. června 2026",
+      "id": "feed-1",
+      "photo": "",
+      "text": "Spuštěna nová verze osobního webu. Kompletní přechod na vlastní platformu, kde platí moje pravidla a čistý design bez algoritmů."
     },
     {
+      "date": "Nedávno",
+      "id": "feed-2",
+      "photo": "",
+      "text": "Pracuji na optimalizaci mých stávajících skriptů a integraci nových AI postupů do měsíčních mini-projektů. Autonomie ve vývoji je pro mě klíčová."
+    }
+  ],
+  "gallery": [
+    {
+      "caption": "",
+      "id": "img-17820833877230.8796147117831346",
+      "src": "photos/profile picture.webp"
+    },
+    {
+      "caption": "",
+      "id": "img-17821671960850.26146581490935095",
+      "src": "photos/467100318_597722279260835_5478618375895695662_n.gif"
+    },
+    {
+      "caption": "",
+      "id": "img-17821672289850.9306477359358475",
+      "src": "photos/PORTFOLIO OG OBRAZEK.webp"
+    },
+    {
+      "caption": "",
+      "id": "img-17821672409440.7516632130843469",
+      "src": "photos/github profile picture.webp"
+    }
+  ],
+  "galleryLayout": "dynamic",
+  "goals": [
+    "Stát se etickým hackerem.",
+    "Budovat vlastní znalosti v oblasti kybernetické bezpečnosti.",
+    "Vytvořit vlastní firmu zaměřenou na technologie a software.",
+    "Vyvíjet aplikace, které pomáhají lidem řešit reálné problémy.",
+    "Neustále se učit nové technologie a zdokonalovat své dovednosti."
+  ],
+  "integrations": {
+    "duolingo": {
+      "enabled": true,
+      "startDate": "2026-06-26",
+      "startStreak": 449,
+      "xp": 50000,
+      "league": "Diamantová"
+    }
+  },
+  "meta": {
+    "accentColor": "#ffffff",
+    "bio": "Jsem Matyáš Holba 👋, student GMK Bílovec se silným zájmem o programování, vývoj softwaru, automatizaci a kybernetickou bezpečnost. Rád vytvářím vlastní projekty a učím se nové technologie samostatně. Baví mě hledat vlastní řešení místo spoléhání na existující placené nástroje.",
+    "copyright": "2026",
+    "initials": "MH",
+    "location": "Česká republika",
+    "motto": "Programuji, hledám vlastní cestu, stavím věci od základu.",
+    "name": "Matyáš Holba",
+    "navLinks": [
+      {
+        "href": "#about",
+        "label": "O mně"
+      },
+      {
+        "href": "#projects",
+        "label": "Projekty"
+      },
+      {
+        "href": "#feed",
+        "label": "Feed"
+      },
+      {
+        "href": "#gallery",
+        "label": "Galerie"
+      },
+      {
+        "href": "#contact",
+        "label": "Kontakt"
+      }
+    ],
+    "og": {
+      "description": "Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.",
+      "favicon": "favicon.png",
+      "image": "https://matyasholba.github.io/MatyasHolba/og-image.png",
+      "siteName": "MH Portfolio",
+      "title": "MH — Portfolio",
+      "url": "https://matyasholba.github.io/MatyasHolba/"
+    }
+  },
+  "projects": [
+    {
+      "description": "Vzdělávací nástroj pro jazykovou praxi na Monkeytype: překládá slova během psaní a vytváří váš osobní slovník. Publikováno na Chrome Web Store.",
+      "features": [
+        "Překlad slov v reálném čase",
+        "Ukládání slov do osobního slovníčku",
+        "JS, HTML, CSS",
+        "Publikováno na Chrome Web Store"
+      ],
+      "id": "proj-1782085152332",
+      "image": "photos/monkeytype-extension.webp",
+      "link": "https://chromewebstore.google.com/detail/npmjbkldiimcflkgdbkngcbdooneohcj?utm_source=item-share-cb",
+      "status": "active",
+      "tags": [
+        "Chrome Extensions",
+        "Learning Languages"
+      ],
+      "title": "MonkeyType Translator"
+    },
+    {
+      "description": "GUI aplikace v Pythonu pro správu více Steam účtů bez nutnosti neustálého přihlašování. Steam totiž dovoluje zapamatovat si jen 5 účtů — tento nástroj to obchází.",
+      "features": [
+        "Přepínání mezi neomezeným počtem Steam účtů",
+        "Zapamatování přihlašovacích údajů lokálně",
+        "Přehledné GUI s náhledy profilových fotek",
+        "Python + vlastní UI"
+      ],
+      "id": "proj-steam-account",
+      "image": "photos/steam-account-manager.webp",
+      "link": "",
+      "status": "active",
+      "tags": [
+        "Python",
+        "GUI",
+        "Steam"
+      ],
+      "title": "Steam Account Manager"
+    },
+    {
+      "description": "Python aplikace s vlastním GUI pro výběr Steam serverů podle pingu. Umožňuje blokovat servery s vysokou latencí a připojovat se výhradně na americké nebo jiné preferované regiony.",
+      "features": [
+        "Měření pingu všech Steam serverů v reálném čase",
+        "Blokování serverů podle regionu nebo latence",
+        "Quick presets pro Evropu, Severní Ameriku, Asii",
+        "Python + HTML/Electron UI"
+      ],
+      "id": "proj-steam-server",
+      "image": "photos/steam-server-picker.webp",
+      "link": "",
+      "status": "active",
+      "tags": [
+        "Python",
+        "Electron",
+        "Networking"
+      ],
+      "title": "Steam Server Picker"
+    },
+    {
+      "description": "Kompletní redesign Shoptet e-shopu pro bratra zaměřeného na pracovní oděvy a ochranné pomůcky. Několik iterací designu, optimalizace UX a vizuální identity.",
+      "features": [
+        "Redesign layoutu a navigace",
+        "Optimalizace produktových kategorií",
+        "Vizuální identita a bannerové grafiky",
+        "Shoptet platform"
+      ],
+      "id": "proj-eshop",
+      "image": "photos/eshop-redesign.webp",
+      "link": "",
+      "status": "active",
+      "tags": [
+        "Web Design",
+        "Shoptet",
+        "UX"
+      ],
+      "title": "Redesign e-shopu (Shoptet)"
+    },
+    {
+      "description": "Komplexní rozšíření pro Anki využívající lokální TTS (Piper) a Groq API pro generování hlasových nahrávek k flashcards. Celý pipeline od stažení hlasů po generování audio souborů.",
+      "features": [
+        "Integrace s Piper TTS pro offline generování hlasu",
+        "Groq API klient pro rychlé AI zpracování",
+        "Správa vlastních hlasových profilů",
+        "Python plugin pro Anki"
+      ],
+      "id": "proj-anki",
+      "image": "photos/anki-extension.webp",
+      "link": "",
+      "status": "active",
+      "tags": [
+        "Python",
+        "Anki",
+        "TTS",
+        "AI"
+      ],
+      "title": "Anki TTS Extension"
+    },
+    {
+      "description": "3D vizualizace vlastního herního PC stolu v Blenderu před jeho fyzickou výrobou. Projekt zahrnoval přesné rozměry, výběr materiálů a finální render místnosti.",
+      "features": [
+        "Přesné rozměry 3000 × 667 mm",
+        "RGB podsvícení nohou stolu",
+        "Render celé místnosti s nábytkem",
+        "Blender 3D modelování"
+      ],
+      "id": "proj-desk",
+      "image": "photos/desk-blender.webp",
+      "link": "",
+      "status": "archived",
+      "tags": [
+        "Blender",
+        "3D",
+        "Design"
+      ],
+      "title": "3D Design vlastního herního stolu"
+    },
+    {
+      "description": "Chrome rozšíření pro rychlou konverzi měn přímo v prohlížeči. Projekt vznikl jako učební cvičení práce s externími API.",
+      "features": [
+        "Konverze v reálném čase přes exchange rate API",
+        "Podpora EUR, USD a dalších měn",
+        "Jednoduchý a přehledný UI",
+        "JavaScript + Chrome Extensions API"
+      ],
+      "id": "proj-currency",
+      "image": "photos/currency-converter.webp",
+      "link": "",
+      "status": "archived",
+      "tags": [
+        "Chrome Extensions",
+        "JavaScript",
+        "API"
+      ],
+      "title": "Currency Converter Extension"
+    },
+    {
+      "description": "Mobilní aplikace kombinující kalendář a správu úkolů do jednoho nástroje. Projekt je stále rozpracovaný — jde o jeden z největších a nejambicióznějších osobních projektů.",
+      "features": [
+        "Týdenní i denní pohled na kalendář",
+        "Správa úkolů a skupin",
+        "Chat integrace",
+        "Flutter / Dart"
+      ],
+      "id": "proj-calendar",
+      "image": "photos/calendar-app.webp",
+      "link": "",
+      "status": "wip",
+      "tags": [
+        "Flutter",
+        "Dart",
+        "Mobile"
+      ],
+      "title": "Kalendář + Úkoly App"
+    },
+    {
+      "description": "Pokusy o tvorbu her — oblast, která mě baví i přes to, jak náročný je herní trh. Experimentování s herní fyzikou, mapami a game designem.",
+      "features": [
+        "Vlastní mapa světa s herní fyzikou",
+        "Experimentální game design",
+        "Zájem o indie game development",
+        "Plány na budoucí projekty"
+      ],
+      "id": "proj-gamedev",
+      "image": "photos/game-dev.webp",
+      "link": "",
+      "status": "wip",
+      "tags": [
+        "Game Dev",
+        "Design"
+      ],
+      "title": "Game Development (WIP)"
+    },
+    {
+      "description": "Automatizovaný OCR nástroj pro extrakci textu z dlouhých screenshotů.",
+      "features": [
+        "Automatické rozdělení obrázků.",
+        "Převod textu pomocí OCR.",
+        "Možnost oprav a exportu."
+      ],
+      "id": "proj-3",
+      "link": "",
+      "status": "archived",
+      "tags": [
+        "Python",
+        "OCR"
+      ],
+      "title": "Nástroj pro OCR dlouhých screenshotů"
+    },
+    {
+      "description": "Produktivitní nástroj pro kontrolu přístupu ke hrám a aplikacím.",
+      "features": [
+        "Časové omezení přístupu ke hrám a programům.",
+        "Zaměření na produktivitu.",
+        "Nemožnost obejití během aktivní blokace."
+      ],
+      "id": "proj-6",
+      "link": "",
+      "status": "wip",
+      "tags": [
+        "Python",
+        "Windows"
+      ],
+      "title": "Systém blokování aplikací"
+    }
+  ],
+  "sections": {
+    "about": true,
+    "goals": true,
+    "projects": true,
+    "feed": true,
+    "gallery": true
+  },
+  "socials": [
+    {
+      "icon": "github",
+      "id": "social-1",
+      "label": "GitHub",
+      "url": "https://github.com/PabloTheX"
+    },
+    {
+      "icon": "instagram",
       "id": "social-2",
       "label": "Instagram",
-      "url": "https://www.instagram.com/matyas.holba",
-      "icon": "instagram"
+      "url": "https://www.instagram.com/matyas.holba"
+    },
+    {
+      "icon": "mail",
+      "id": "social-3",
+      "label": "E-mail",
+      "url": "mailto:matyas.holba@outlook.com"
+    },
+    {
+      "icon": "twitter",
+      "id": "social-4",
+      "label": "X (Twitter)",
+      "url": "https://x.com/"
+    },
+    {
+      "icon": "facebook",
+      "id": "social-5",
+      "label": "Facebook",
+      "url": "https://facebook.com/"
+    },
+    {
+      "icon": "reddit",
+      "id": "social-6",
+      "label": "Reddit",
+      "url": "https://reddit.com/"
     }
   ],
   "techStack": [
@@ -88,159 +370,5 @@
     "HTML / CSS / JS",
     "Blender",
     "Chrome Extensions"
-  ],
-  "goals": [
-    "Stát se etickým hackerem.",
-    "Budovat vlastní znalosti v oblasti kybernetické bezpečnosti.",
-    "Vytvořit vlastní firmu zaměřenou na technologie a software.",
-    "Vyvíjet aplikace, které pomáhají lidem řešit reálné problémy.",
-    "Neustále se učit nové technologie a zdokonalovat své dovednosti."
-  ],
-  "projects": [
-    {
-      "id": "proj-3",
-      "title": "Nástroj pro OCR dlouhých screenshotů",
-      "description": "Automatizovaný OCR nástroj pro extrakci textu z dlouhých screenshotů.",
-      "features": [
-        "Automatické rozdělení obrázků.",
-        "Převod textu pomocí OCR.",
-        "Možnost oprav a exportu."
-      ],
-      "tags": [
-        "Python",
-        "OCR"
-      ],
-      "link": "",
-      "status": "archived"
-    },
-    {
-      "id": "proj-4",
-      "title": "Vlastní jazykové rozšíření do prohlížeče",
-      "description": "Chrome rozšíření pro interaktivní učení jazyků při procházení webu.",
-      "features": [
-        "Inspirace nástroji Relingo, Language Reactor a eLang.",
-        "Učení jazyků při sledování videí a čtení textů."
-      ],
-      "tags": [
-        "Chrome Extensions",
-        "JavaScript"
-      ],
-      "link": "",
-      "status": "archived"
-    },
-    {
-      "id": "proj-5",
-      "title": "Rozšíření pro převod PDF do dark modu",
-      "description": "Chrome rozšíření pro konverzi PDF dokumentů do dark mode.",
-      "features": [
-        "Generování nového PDF.",
-        "Pokročilé nastavení barev.",
-        "Automatická správa dočasných souborů."
-      ],
-      "tags": [
-        "Chrome Extensions",
-        "PDF"
-      ],
-      "link": "",
-      "status": "archived"
-    },
-    {
-      "id": "proj-6",
-      "title": "Systém blokování aplikací",
-      "description": "Produktivitní nástroj pro kontrolu přístupu ke hrám a aplikacím.",
-      "features": [
-        "Časové omezení přístupu ke hrám a programům.",
-        "Zaměření na produktivitu.",
-        "Nemožnost obejití během aktivní blokace."
-      ],
-      "tags": [
-        "Python",
-        "Windows"
-      ],
-      "link": "",
-      "status": "wip"
-    },
-    {
-      "id": "proj-7",
-      "title": "Nástroj pro sledování herních tržišť",
-      "description": "Python aplikace pro analýzu a porovnávání cen na herních tržištích.",
-      "features": [
-        "Analýza cen a porovnávání více tržišť.",
-        "Vyhledávání zajímavých nabídek.",
-        "Python aplikace."
-      ],
-      "tags": [
-        "Python",
-        "Scraping"
-      ],
-      "link": "",
-      "status": "archived"
-    },
-    {
-      "id": "proj-1782085152332",
-      "title": "MonkeyType Translator – Learn languages while typing ",
-      "description": "Vzdělávací nástroj pro jazykovou praxi na Monkeytype: překládá slova během psaní a vytváří váš osobní slovník.\n\nToto rozšíření je určeno pro vzdělávací účely při používání platformy monkeytype.com. Jeho hlavní funkcí je automatické zobrazování překladů slov pomocí služby Google Translate. To umožňuje uživatelům rozšiřovat si slovní zásobu a zlepšovat porozumění angličtině či jiným jazykům přímo při psaní.",
-      "features": [
-        "Překlad slov",
-        "Ukládání slov do slovníčku",
-        "JS, HTML, CSS"
-      ],
-      "tags": [
-        "Chrome Extensions",
-        "Learning Languages"
-      ],
-      "link": "https://chromewebstore.google.com/detail/npmjbkldiimcflkgdbkngcbdooneohcj?utm_source=item-share-cb",
-      "status": "active"
-    }
-  ],
-  "feed": [
-    {
-      "id": "feed-1",
-      "date": "21. června 2026",
-      "text": "Spuštěna nová verze osobního webu. Kompletní přechod na vlastní platformu, kde platí moje pravidla a čistý design bez algoritmů.",
-      "photo": ""
-    },
-    {
-      "id": "feed-2",
-      "date": "Nedávno",
-      "text": "Pracuji na optimalizaci mých stávajících skriptů a integraci nových AI postupů do měsíčních mini-projektů. Autonomie ve vývoji je pro mě klíčová.",
-      "photo": ""
-    }
-  ],
-  "gallery": [
-    {
-      "id": "img-17820833877230.8796147117831346",
-      "src": "photos/profile picture.png",
-      "caption": ""
-    },
-    {
-      "id": "img-17821671960850.26146581490935095",
-      "src": "photos/467100318_597722279260835_5478618375895695662_n.gif",
-      "caption": ""
-    },
-    {
-      "id": "img-17821672289850.9306477359358475",
-      "src": "photos/PORTFOLIO OG OBRAZEK.png",
-      "caption": ""
-    },
-    {
-      "id": "img-17821672409440.7516632130843469",
-      "src": "photos/github profile picture.png",
-      "caption": ""
-    }
-  ],
-  "sections": {
-    "about": true,
-    "goals": true,
-    "projects": true,
-    "feed": true,
-    "gallery": true
-  },
-  "integrations": {
-    "duolingo": {
-      "enabled": false,
-      "username": ""
-    }
-  },
-  "galleryLayout": "dynamic"
+  ]
 }
