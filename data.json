@@ -329,7 +329,7 @@
       "icon": "github",
       "id": "social-1",
       "label": "GitHub",
-      "url": "https://github.com/PabloTheX"
+      "url": "https://github.com/MatyasHolba"
     },
     {
       "icon": "instagram",
@@ -341,25 +341,7 @@
       "icon": "mail",
       "id": "social-3",
       "label": "E-mail",
-      "url": "mailto:matyas.holba@outlook.com"
-    },
-    {
-      "icon": "twitter",
-      "id": "social-4",
-      "label": "X (Twitter)",
-      "url": "https://x.com/"
-    },
-    {
-      "icon": "facebook",
-      "id": "social-5",
-      "label": "Facebook",
-      "url": "https://facebook.com/"
-    },
-    {
-      "icon": "reddit",
-      "id": "social-6",
-      "label": "Reddit",
-      "url": "https://reddit.com/"
+      "url": "matyasholba9@gmail.com"
     }
   ],
   "techStack": [
