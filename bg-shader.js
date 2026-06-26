@@ -231,9 +231,13 @@ function initBgShader() {
 
   function resize() {
     const maxDim = 2560;
-    const scale = Math.min(1, maxDim / Math.max(window.innerWidth, window.innerHeight));
-    canvas.width = Math.floor(window.innerWidth * scale);
-    canvas.height = Math.floor(window.innerHeight * scale);
+    let baseScale = Math.min(1, maxDim / Math.max(window.innerWidth, window.innerHeight));
+    
+    if (window.perfGrade === 'low') baseScale *= 0.25;
+    else if (window.perfGrade === 'medium') baseScale *= 0.5;
+    
+    canvas.width = Math.floor(window.innerWidth * baseScale);
+    canvas.height = Math.floor(window.innerHeight * baseScale);
     gl.viewport(0, 0, canvas.width, canvas.height);
   }
   window.addEventListener('resize', resize);
@@ -242,6 +246,20 @@ function initBgShader() {
   const startTime = performance.now();
 
   function render(now) {
+    let fadeTheme = 1.0;
+    let sectionTop = 10000.0;
+    if (frameScene) {
+      const rect = frameScene.getBoundingClientRect();
+      sectionTop = rect.top;
+      // If the scene is completely scrolled out of view, don't draw (save battery/CPU)
+      if (rect.bottom < 0) {
+          requestAnimationFrame(render);
+          return;
+      }
+      let tOut = Math.min(1.0, Math.max(0.0, rect.bottom / (window.innerHeight * 0.5)));
+      fadeTheme = tOut;
+    }
+
     const time = (now - startTime) / 1000;
     
     gl.uniform2f(uResolution, canvas.width, canvas.height);
@@ -249,15 +267,6 @@ function initBgShader() {
     gl.uniform2f(uMouse, mouseX, mouseY);
     gl.uniform1f(uScrollY, scrollY);
     gl.uniform1f(uIsHovering, isHovering);
-    
-    let fadeTheme = 1.0;
-    let sectionTop = 10000.0;
-    if (frameScene) {
-      const rect = frameScene.getBoundingClientRect();
-      sectionTop = rect.top;
-      let tOut = Math.min(1.0, Math.max(0.0, rect.bottom / (window.innerHeight * 0.5)));
-      fadeTheme = tOut;
-    }
     gl.uniform1f(uThemeFade, fadeTheme);
     gl.uniform1f(uSectionTop, sectionTop);
 
