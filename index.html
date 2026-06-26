@@ -21,6 +21,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="styles.css?v=2">
+<script>
+// --- Device Benchmark ---
+window.perfGrade = 'high'; // Default
+(function() {
+    try {
+        const start = performance.now();
+        let iters = 0;
+        // Simple CPU benchmark
+        for (let i = 0; i < 2000000; i++) { iters += Math.sqrt(i); }
+        const duration = performance.now() - start;
+        if (duration > 35) window.perfGrade = 'low';
+        else if (duration > 15) window.perfGrade = 'medium';
+        else window.perfGrade = 'high';
+        
+        // Also factor in device width/mobile
+        const isMobile = window.innerWidth < 768;
+        if (isMobile && window.perfGrade === 'high') window.perfGrade = 'medium'; 
+        console.log('Perf Grade:', window.perfGrade, '(', duration.toFixed(1), 'ms)');
+    } catch(e) {}
+})();
+</script>
 </head>
 <body class="smooth-scroll">
 
