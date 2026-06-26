@@ -229,12 +229,17 @@ function initBgShader() {
     scrollY = window.scrollY;
   });
 
+  const isMobile = window.innerWidth < 768;
+
   function resize() {
     const maxDim = 2560;
     let baseScale = Math.min(1, maxDim / Math.max(window.innerWidth, window.innerHeight));
     
-    if (window.perfGrade === 'low') baseScale *= 0.25;
-    else if (window.perfGrade === 'medium') baseScale *= 0.5;
+    // On mobile, we keep scale at 1.0 for a beautifully crisp static image
+    if (!isMobile) {
+      if (window.perfGrade === 'low') baseScale *= 0.25;
+      else if (window.perfGrade === 'medium') baseScale *= 0.5;
+    }
     
     canvas.width = Math.floor(window.innerWidth * baseScale);
     canvas.height = Math.floor(window.innerHeight * baseScale);
@@ -244,15 +249,18 @@ function initBgShader() {
   resize();
 
   const startTime = performance.now();
+  let hasRenderedMobile = false;
 
   function render(now) {
+    if (isMobile && hasRenderedMobile) return; // Render exactly once on mobile!
+
     let fadeTheme = 1.0;
     let sectionTop = 10000.0;
     if (frameScene) {
       const rect = frameScene.getBoundingClientRect();
       sectionTop = rect.top;
       // If the scene is completely scrolled out of view, don't draw (save battery/CPU)
-      if (rect.bottom < 0) {
+      if (rect.bottom < 0 && !isMobile) {
           requestAnimationFrame(render);
           return;
       }
@@ -271,7 +279,12 @@ function initBgShader() {
     gl.uniform1f(uSectionTop, sectionTop);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
-    requestAnimationFrame(render);
+    
+    if (isMobile) {
+      hasRenderedMobile = true;
+    } else {
+      requestAnimationFrame(render);
+    }
   }
   
   requestAnimationFrame(render);
