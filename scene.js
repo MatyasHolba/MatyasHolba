@@ -381,7 +381,10 @@
         frames.push(frames[frames.length - 1] ?? null);
       }
       onProgress && onProgress((i + 1) / frameCount);
+      // Breather for UI (Prevents 20-second freeze)
+      await new Promise(r => setTimeout(r, 0));
     }
+
 
     vid.src = '';
     document.body.removeChild(vid);
@@ -443,7 +446,12 @@
       const src1 = cfg.layer1Video ? `frames/${cfg.layer1Video}` : 'frames/1.mp4';
       const src2 = cfg.layer2Video ? `frames/${cfg.layer2Video}` : 'frames/2.mp4';
       setProgress(0.02);
-      decodeVideoFromURL._opts = { skipFrames: 0, frameStep: 2, knownTotal: cfg.totalFrames || 60 };
+      
+      let fStep = 2;
+      if (window.perfGrade === 'low') fStep = 4;
+      else if (window.perfGrade === 'high') fStep = 1;
+      
+      decodeVideoFromURL._opts = { skipFrames: 0, frameStep: fStep, knownTotal: cfg.totalFrames || 60 };
       let p1 = 0, p2 = 0;
       const updPar = () => setProgress(0.02 + ((p1 + p2) / 2) * 0.96);
       const safeDecode = async (src, progressFn) => {
