@@ -561,14 +561,21 @@ function setupScrollEffects() {
     });
   }
 
+  let isScrolling = false;
   window.addEventListener('scroll', () => {
-    header.classList.toggle('scrolled', window.scrollY > 80);
-    closeMobileNav();
-    const y    = window.scrollY;
-    const docH = document.documentElement.scrollHeight - window.innerHeight;
-    const progressEl = document.getElementById('scroll-progress');
-    if (progressEl) progressEl.style.width = (docH > 0 ? (y / docH * 100) : 0) + '%';
-    updateNavActive();
+    if (!isScrolling) {
+      window.requestAnimationFrame(() => {
+        header.classList.toggle('scrolled', window.scrollY > 80);
+        closeMobileNav();
+        const y    = window.scrollY;
+        const docH = document.documentElement.scrollHeight - window.innerHeight;
+        const progressEl = document.getElementById('scroll-progress');
+        if (progressEl) progressEl.style.width = (docH > 0 ? (y / docH * 100) : 0) + '%';
+        updateNavActive();
+        isScrolling = false;
+      });
+      isScrolling = true;
+    }
   }, { passive: true });
 }
 
