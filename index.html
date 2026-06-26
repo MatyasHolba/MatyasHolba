@@ -1,2292 +1,421 @@
 <!DOCTYPE html>
 <html lang="cs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Prevent Dark Reader and similar extensions from inverting colours -->
-    <meta name="color-scheme" content="light dark">
-    <meta name="darkreader-lock">
-    <title>MH — Portfolio</title>
-    <meta name="description" content="Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.">
-    <!-- FAVICON:START -->
-
-    <link rel="icon" id="favicon-link" href="favicon.png" type="image/png">
-
-    <link rel="shortcut icon" href="favicon.png">
-
-    <!-- FAVICON:END -->
-    <!-- OG:START -->
-
-    <meta property="og:title" content="MH — Portfolio">
-
-    <meta property="og:description" content="Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.">
-
-    <meta property="og:image" content="https://matyasholba.github.io/MatyasHolba/og-image.png">
-
-    <meta property="og:url" content="https://matyasholba.github.io/MatyasHolba/">
-
-    <meta property="og:type" content="website">
-
-    <meta property="og:site_name" content="MH Portfolio">
-
-    <meta name="twitter:card" content="summary_large_image">
-
-    <meta name="twitter:title" content="MH — Portfolio">
-
-    <meta name="twitter:description" content="Osobní portfolio a digitální prostor. Programování, projekty, kybernetická bezpečnost.">
-
-    <meta name="twitter:image" content="https://matyasholba.github.io/MatyasHolba/og-image.png">
-
-    <!-- OG:END -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-main: #050507;
-            --bg-card: #0a0a0f;
-            --bg-card-hover: #0f0f16;
-            --border-color: #1a1a2e;
-            --border-hover: #2a2a4a;
-            --text-primary: #f0f0ff;
-            --text-secondary: #8888aa;
-            --text-muted: #444466;
-            --accent: #7b7bff;
-            --accent-2: #ff6b9d;
-            --accent-3: #00d4aa;
-            --glow: rgba(123, 123, 255, 0.15);
-            --glow-strong: rgba(123, 123, 255, 0.3);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: var(--bg-main);
-            color: var(--text-secondary);
-            line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
-            overflow-x: hidden;
-        }
-
-        /* ── Background noise & gradient ── */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background:
-                radial-gradient(ellipse 80% 50% at 20% -10%, rgba(123,123,255,0.08) 0%, transparent 60%),
-                radial-gradient(ellipse 60% 40% at 80% 100%, rgba(0,212,170,0.05) 0%, transparent 60%);
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* ── Header ── */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background-color: rgba(5, 5, 7, 0.75);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid var(--border-color);
-            z-index: 1000;
-            transition: border-color 0.3s ease;
-        }
-
-        header.scrolled {
-            border-bottom-color: var(--border-hover);
-        }
-
-        nav {
-            max-width: 900px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 24px;
-        }
-
-        .logo {
-            color: var(--text-primary);
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            cursor: default;
-            position: relative;
-        }
-
-        .logo::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; left: 0;
-            width: 100%; height: 1px;
-            background: var(--accent);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover::after { transform: scaleX(1); }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .nav-links a {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 400;
-            padding: 6px 12px;
-            border-radius: 6px;
-            letter-spacing: 0.3px;
-            transition: color 0.2s ease, background 0.2s ease;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            color: var(--text-primary);
-            background: rgba(123,123,255,0.08);
-        }
-
-        /* Lando Norris Text Effect for Navigation Links */
-        .nav-links a.lando-link {
-            display: inline-flex;
-            overflow: hidden;
-            position: relative;
-            line-height: 1.2;
-        }
-
-        .nav-links a.lando-link .letter-container {
-            display: inline-block;
-            position: relative;
-        }
-
-        .nav-links a.lando-link .letter-container span {
-            display: inline-block;
-            transition: transform 0.35s cubic-bezier(0.76, 0, 0.24, 1);
-            transition-delay: var(--delay);
-        }
-
-        .nav-links a.lando-link .letter-container .letter-bottom {
-            position: absolute;
-            left: 0;
-            top: 150%;
-        }
-
-        .nav-links a.lando-link:hover .letter-top {
-            transform: translateY(-150%);
-        }
-
-        .nav-links a.lando-link:hover .letter-bottom {
-            transform: translateY(-150%);
-        }
-
-        /* ── Main ── */
-        main {
-            max-width: 860px;
-            margin: 0 auto;
-            padding: 140px 24px 100px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ── Hero ── */
-        .hero {
-            margin-bottom: 100px;
-            animation: fadeInUp 0.8s ease both;
-        }
-
-        .hero-label {
-            font-size: 12px;
-            font-weight: 500;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .hero-label::before {
-            content: '';
-            width: 24px; height: 1px;
-            background: var(--accent);
-        }
-
-        .motto {
-            font-size: clamp(22px, 4vw, 30px);
-            color: var(--text-primary);
-            font-weight: 300;
-            line-height: 1.45;
-            letter-spacing: -0.5px;
-            margin-bottom: 24px;
-            max-width: 680px;
-        }
-
-        .motto strong {
-            font-weight: 600;
-            background: linear-gradient(135deg, #7b7bff, #ff6b9d);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .hero-sub {
-            font-size: 14px;
-            color: var(--text-muted);
-            letter-spacing: 0.2px;
-        }
-
-        /* ── Sections ── */
-        section {
-            margin-bottom: 100px;
-            scroll-margin-top: 90px;
-            animation: fadeInUp 0.6s ease both;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 36px;
-        }
-
-        .section-number {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--accent);
-            letter-spacing: 1px;
-            font-variant-numeric: tabular-nums;
-        }
-
-        h2 {
-            color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .section-line {
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, var(--border-hover), transparent);
-        }
-
-        /* ── About ── */
-        .bio-text {
-            font-size: 15px;
-            line-height: 1.8;
-            color: var(--text-secondary);
-            max-width: 640px;
-            margin-bottom: 32px;
-        }
-
-        .tech-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 14px;
-        }
-
-        .tech-stack {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tech-badge {
-            background: rgba(123,123,255,0.06);
-            color: var(--text-secondary);
-            border: 1px solid var(--border-color);
-            padding: 5px 14px;
-            border-radius: 100px;
-            font-size: 12px;
-            font-weight: 400;
-            letter-spacing: 0.3px;
-            transition: all 0.2s ease;
-            cursor: default;
-        }
-
-        .tech-badge:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: rgba(123,123,255,0.1);
-            transform: translateY(-1px);
-        }
-
-        /* ── Goals ── */
-        .goals-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .goals-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 14px;
-            font-size: 15px;
-            color: var(--text-secondary);
-            padding: 14px 18px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--bg-card);
-            transition: all 0.2s ease;
-        }
-
-        .goals-list li:hover {
-            border-color: var(--border-hover);
-            background: var(--bg-card-hover);
-            transform: translateX(4px);
-        }
-
-        .goal-icon {
-            width: 18px; height: 18px;
-            flex-shrink: 0;
-            margin-top: 2px;
-            color: var(--accent);
-            opacity: 0.7;
-        }
-
-        /* ── Projects ── */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 16px;
-        }
-
-        .project-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            padding: 28px;
-            border-radius: 12px;
-            transition: all 0.25s ease;
-            position: relative;
-            overflow: hidden;
-            cursor: default;
-        }
-
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), var(--glow) 0%, transparent 60%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .project-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 40px rgba(0,0,0,0.4);
-        }
-
-        .project-card:hover::before {
-            opacity: 1;
-        }
-
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            gap: 12px;
-        }
-
-        .project-card h3 {
-            color: var(--text-primary);
-            font-size: 15px;
-            font-weight: 500;
-            line-height: 1.4;
-        }
-
-        .project-status {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            padding: 3px 8px;
-            border-radius: 100px;
-            text-transform: uppercase;
-            flex-shrink: 0;
-        }
-
-        .project-status.active {
-            background: rgba(0,212,170,0.1);
-            color: var(--accent-3);
-            border: 1px solid rgba(0,212,170,0.2);
-        }
-
-        .project-description {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-            line-height: 1.6;
-        }
-
-        .project-features {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-            margin-bottom: 16px;
-        }
-
-        .project-features li {
-            font-size: 13px;
-            color: var(--text-secondary);
-            padding-left: 14px;
-            position: relative;
-        }
-
-        .project-features li::before {
-            content: "·";
-            position: absolute;
-            left: 3px;
-            color: var(--accent);
-        }
-
-        .project-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-
-        .project-tag {
-            font-size: 11px;
-            color: var(--text-muted);
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--border-color);
-            padding: 3px 10px;
-            border-radius: 100px;
-            letter-spacing: 0.3px;
-        }
-
-        .project-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--accent);
-            text-decoration: none;
-            margin-top: 12px;
-            opacity: 0.8;
-            transition: opacity 0.2s ease;
-        }
-
-        .project-link:hover { opacity: 1; }
-
-        /* ── Feed ── */
-        .feed-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .feed-item {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 24px;
-            padding: 28px 0;
-            border-bottom: 1px solid var(--border-color);
-            transition: opacity 0.2s ease;
-        }
-
-        .feed-item:first-child { border-top: 1px solid var(--border-color); }
-
-        .feed-item:hover { opacity: 0.85; }
-
-        .feed-date {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            padding-top: 3px;
-            font-weight: 500;
-            line-height: 1.4;
-        }
-
-        .feed-content { }
-
-        .feed-text {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            margin-bottom: 0;
-        }
-
-        .feed-photo {
-            margin-top: 14px;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            max-width: 400px;
-        }
-
-        .feed-photo img {
-            width: 100%;
-            display: block;
-            transition: transform 0.4s ease;
-        }
-
-        .feed-photo img:hover { transform: scale(1.03); }
-
-        /* ── Gallery ── */
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        .gallery-item {
-            aspect-ratio: 1;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .gallery-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.4s ease;
-        }
-
-        .gallery-item::after {
-            content: attr(data-caption);
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            background: linear-gradient(to top, rgba(5,5,7,0.9), transparent);
-            padding: 16px 12px 10px;
-            font-size: 12px;
-            color: var(--text-secondary);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .gallery-item:hover img { transform: scale(1.06); }
-        .gallery-item:hover::after { opacity: 1; }
-
-        .gallery-empty {
-            color: var(--text-muted);
-            font-size: 13px;
-            padding: 32px 0;
-            font-style: italic;
-        }
-
-        /* ── Dynamic Gallery (Rows + Columns) ── */
-        .gallery-dynamic {
-            width: 100%;
-            height: calc(var(--row-count, 3) * 233px);
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-        }
-
-        .gallery-dynamic .row {
-            flex: 1;
-            display: flex;
-            transition: flex 0.6s cubic-bezier(0.25, 1, 0.3, 1);
-            min-height: 0;
-        }
-
-        .gallery-dynamic:hover .row {
-            flex: 0.7;
-        }
-        .gallery-dynamic .row:hover {
-            flex: 2.2;
-        }
-
-        .gallery-dynamic .cell {
-            flex: 1;
-            padding: 8px;
-            transition: flex-grow 0.5s cubic-bezier(0.25, 1, 0.3, 1);
-            min-width: 0;
-        }
-
-        .gallery-dynamic .row:hover .cell:hover {
-            flex-grow: 3;
-        }
-
-        .gallery-dynamic .card {
-            width: 100%;
-            height: 100%;
-            border-radius: 22px;
-            overflow: hidden;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .gallery-dynamic .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .gallery-dynamic .cell:hover img {
-            transform: scale(1.07);
-        }
-
-        .gallery-dynamic .caption {
-            position: absolute;
-            bottom: 18px;
-            left: 18px;
-            color: white;
-            font-weight: bold;
-            opacity: 0;
-            transform: translateY(10px);
-            transition: 0.4s ease;
-            z-index: 2;
-        }
-
-        .gallery-dynamic .cell:hover .caption {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .gallery-dynamic .card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
-            opacity: 0;
-            transition: 0.4s;
-            z-index: 1;
-        }
-
-        .gallery-dynamic .cell:hover .card::after {
-            opacity: 1;
-        }
-
-        @media (max-width: 768px) {
-            .gallery-dynamic {
-                height: calc(var(--row-count, 3) * 166px);
-            }
-            .gallery-dynamic .card {
-                border-radius: 12px;
-            }
-            .gallery-dynamic .caption {
-                font-size: 12px;
-                bottom: 10px;
-                left: 10px;
-            }
-        }
-
-        /* ── Lightbox ── */
-        .lightbox {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(5,5,7,0.96);
-            backdrop-filter: blur(20px);
-            z-index: 9999;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.2s ease;
-        }
-
-        .lightbox.open { display: flex; }
-
-        .lightbox-img {
-            max-width: 90vw;
-            max-height: 88vh;
-            border-radius: 10px;
-            border: 1px solid var(--border-hover);
-            object-fit: contain;
-        }
-
-        .lightbox-close {
-            position: absolute;
-            top: 24px; right: 24px;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 24px;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
-            transition: color 0.2s ease;
-            line-height: 1;
-        }
-
-        .lightbox-close:hover { color: var(--text-primary); }
-
-        .lightbox-caption {
-            position: absolute;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 13px;
-            color: var(--text-muted);
-            text-align: center;
-        }
-
-        /* ── Footer ── */
-        footer {
-            border-top: 1px solid var(--border-color);
-            padding: 60px 24px 48px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .footer-inner {
-            max-width: 860px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .footer-logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: 3px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 8px;
-        }
-
-        .social-link {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 13px;
-            padding: 8px 16px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            transition: all 0.2s ease;
-        }
-
-        .social-link:hover {
-            color: var(--text-primary);
-            border-color: var(--border-hover);
-            background: rgba(255,255,255,0.03);
-            transform: translateY(-2px);
-        }
-
-        .social-link svg {
-            width: 14px; height: 14px;
-        }
-
-        .copyright {
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.5px;
-        }
-
-        /* ── Animations ── */
-        /* ═══════════════════════════════════════
-           FRAME SCENE (scroll animation)
-           Remove #frame-scene from HTML to disable
-        ═══════════════════════════════════════ */
-        #frame-scene {
-            position: relative;
-            height: 250vh; /* scrollable distance – changed via editor */
-            background: #fff;
-            /* Block Dark Reader filter inheritance */
-            color-scheme: light;
-        }
-
-        #frame-sticky {
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: visible;  /* must be visible for 3D carousel */
-            color-scheme: light;
-        }
-
-        #frame-canvas {
-            display: block;
-            max-width: 100vw;
-            max-height: 100vh;
-            object-fit: contain;
-            width: auto;
-            height: 100vh;
-            transition: none;
-            /* Counter Dark Reader SVG filter applied to html/body */
-            filter: none !important;
-            -webkit-filter: none !important;
-            /* Smooth parallax + idle animation */
-            will-change: transform;
-            transform-origin: center center;
-        }
-
-        /* White-to-dark page transition overlay */
-        #scene-bg {
-            position: fixed;
-            inset: 0;
-            background: #fff;
-            z-index: -1;
-            pointer-events: none;
-            transition: background 0.05s linear;
-            color-scheme: light;
-            filter: none !important;
-            -webkit-filter: none !important;
-        }
-
-        /* ── 3D Carousel container ── */
-        #scene-projects {
-            position: absolute;
-            bottom: 42%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-            z-index: 10;
-            /* 3D context */
-            perspective: 720px;
-            transform-style: preserve-3d;
-        }
-
-        #scene-projects.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .scene-proj-card {
-            position: absolute;
-            width: 170px;
-            margin-left: -85px;
-            margin-top: -115px;
-            background: rgba(255,255,255,0.95);
-            border: 1px solid rgba(0,0,0,0.09);
-            border-radius: 18px;
-            padding: 20px 18px;
-            backdrop-filter: blur(16px);
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.13), 0 2px 8px rgba(0,0,0,0.07);
-            cursor: pointer;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            will-change: transform, opacity;
-            backface-visibility: hidden;
-            transition: box-shadow 0.25s ease;
-        }
-
-        .scene-proj-card:hover {
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2), 0 4px 12px rgba(0,0,0,0.1);
-        }
-
-        .scene-proj-card .sp-num {
-            font-size: 10px;
-            font-weight: 600;
-            letter-spacing: 1.5px;
-            color: #7b7bff;
-            text-transform: uppercase;
-        }
-
-        .scene-proj-card .sp-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: #111;
-            line-height: 1.35;
-        }
-
-        .scene-proj-card .sp-tag {
-            font-size: 10px;
-            color: #777;
-            background: rgba(123,123,255,0.1);
-            border-radius: 20px;
-            padding: 2px 8px;
-            display: inline-block;
-        }
-
-        /* Scroll hint */
-        #scene-scroll-hint {
-            position: absolute;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            color: #aaa;
-            font-size: 11px;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            font-family: 'Inter', sans-serif;
-            transition: opacity 0.4s ease;
-        }
-
-        #scene-scroll-hint .hint-arrow {
-            width: 1px;
-            height: 40px;
-            background: linear-gradient(to bottom, #aaa, transparent);
-            animation: arrowPulse 1.5s ease infinite;
-        }
-
-        @keyframes arrowPulse {
-            0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
-            50%       { opacity: 1;   transform: scaleY(1); }
-        }
-
-        /* Header adjusts for light/dark scene */
-        header.scene-light {
-            background-color: rgba(255,255,255,0.85);
-            border-bottom-color: rgba(0,0,0,0.08);
-        }
-
-        header.scene-light .logo,
-        header.scene-light .nav-links a {
-            color: #111;
-        }
-
-        header.scene-light .nav-links a:hover {
-            background: rgba(0,0,0,0.06);
-            color: #000;
-        }
-
-        /* Hide main content until scene done */
-        body.scene-active main,
-        body.scene-active footer {
-            visibility: hidden;
-        }
-
-        @keyframes sceneReveal {
-            from { opacity: 0; transform: translateY(12px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ═══════════════════════════════════════ */
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(16px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* ── Loading ── */
-        #loading {
-            position: fixed;
-            inset: 0;
-            background: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9998;
-            transition: opacity 0.5s ease;
-        }
-
-        #loading.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .loader-dot {
-            width: 6px; height: 6px;
-            background: #7b7bff;
-            border-radius: 50%;
-            margin: 0 3px;
-            animation: bounce 0.8s ease infinite;
-            display: inline-block;
-        }
-
-        .loader-dot:nth-child(2) { animation-delay: 0.15s; }
-        .loader-dot:nth-child(3) { animation-delay: 0.3s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 640px) {
-            .nav-links a { display: none; }
-            .motto { font-size: 20px; }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-            .feed-item { grid-template-columns: 1fr; gap: 8px; }
-            .feed-date { font-size: 10px; }
-        }
-
-        /* ── Scrollbar ── */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border-hover); border-radius: 2px; }
-
-        /* ── Hologram text card ── */
-        .scene-holo-text {
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 18px;
-            padding: 28px 36px;
-            text-align: center;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.18);
-            max-width: 380px;
-        }
-        .scene-holo-text .sh-main {
-            font-size: clamp(18px, 4vw, 28px);
-            font-weight: 700;
-            color: #fff;
-            line-height: 1.3;
-            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
-        }
-        .scene-holo-text .sh-sub {
-            margin-top: 10px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.7);
-            letter-spacing: 1px;
-        }
-
-        /* ── Duolingo Widget ── */
-        .duo-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px 32px;
-            display: flex;
-            gap: 32px;
-            align-items: center;
-            flex-wrap: wrap;
-            max-width: 620px;
-        }
-        .duo-avatar {
-            width: 72px;
-            height: 72px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid #58cc02;
-            flex-shrink: 0;
-        }
-        .duo-avatar-placeholder {
-            width: 72px; height: 72px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #58cc02, #89e219);
-            display: flex; align-items: center; justify-content: center;
-            font-size: 32px; flex-shrink: 0;
-        }
-        .duo-info { flex: 1; min-width: 200px; }
-        .duo-name {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 4px;
-        }
-        .duo-username {
-            font-size: 13px;
-            color: var(--text3);
-            margin-bottom: 16px;
-        }
-        .duo-stats {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-        .duo-stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: var(--bg3);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px 16px;
-            min-width: 70px;
-        }
-        .duo-stat-val {
-            font-size: 22px;
-            font-weight: 800;
-            color: #58cc02;
-            line-height: 1;
-        }
-        .duo-stat-label {
-            font-size: 11px;
-            color: var(--text3);
-            margin-top: 4px;
-            text-align: center;
-        }
-        .duo-streak .duo-stat-val { color: #ff9600; }
-        .duo-error {
-            font-size: 13px;
-            color: var(--text3);
-            font-style: italic;
-        }
-        .duo-loading { font-size: 13px; color: var(--text3); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="dark">
+<meta name="darkreader-lock">
+<title>MH — Portfolio</title>
+<meta name="description" content="Programuji, hledám vlastní cestu, stavím věci od základu.">
+
+<link rel="icon" id="favicon-link" href="favicon.png" type="image/png">
+
+<meta property="og:title" content="Matyáš Holba">
+<meta property="og:description" content="Programuji, hledám vlastní cestu, stavím věci od základu.">
+<meta property="og:image" content="https://matyasholba.github.io/MatyasHolba/og-image.png">
+<meta property="og:url" content="https://matyasholba.github.io/MatyasHolba/">
+<meta property="og:type" content="website">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css?v=2">
 </head>
-<body>
+<body class="smooth-scroll">
 
-<!-- Loading -->
+<!-- Global WebGL Background -->
+<canvas id="global-webgl-bg"></canvas>
+
+<!-- Custom cursor -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="scroll-progress"></div>
+<canvas id="cursor-trail"></canvas>
+
+<!-- Loading screen -->
 <div id="loading">
-    <span class="loader-dot"></span>
-    <span class="loader-dot"></span>
-    <span class="loader-dot"></span>
+  <div class="load-text">
+    <span class="load-letter">M</span>
+    <span class="load-letter">H</span>
+  </div>
+  <div class="load-bar"><div class="load-bar-fill"></div></div>
 </div>
 
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-    <button class="lightbox-close" id="lightboxClose" aria-label="Zavřít">✕</button>
-    <img class="lightbox-img" id="lightboxImg" src="" alt="">
-    <div class="lightbox-caption" id="lightboxCaption"></div>
+  <button class="lightbox-close" id="lightboxClose" aria-label="Zavřít">✕</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
 
+<!-- Mobile nav overlay -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Mobilní navigace"></nav>
+
+<!-- Navigation -->
 <header id="header">
-    <nav>
-        <div class="logo" id="nav-logo">MH</div>
-        <div class="nav-links" id="nav-links"></div>
-    </nav>
+  <a href="#" class="logo" id="nav-logo">MH</a>
+  <ul class="nav-links" id="nav-links"></ul>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Otevřít menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
 </header>
 
-<div id="scene-bg"></div>
-<div id="frame-scene">
-    <div id="frame-sticky">
-            <video id="vid-layer1" muted playsinline preload="auto" style="display:none"></video>
-    <video id="vid-layer2" muted playsinline preload="auto" style="display:none"></video>
-    <canvas id="frame-canvas"></canvas>
-        <div id="scene-projects"></div>
-        <div id="scene-scroll-hint">
-            <span>Scroll</span>
-            <div class="hint-arrow"></div>
-        </div>
+<!-- Hero -->
+<div id="hero-scroll-container">
+  <div class="hero-wrapper" id="hero">
+    <div class="hero-bg-accent"></div>
+    <div class="hero-bg-accent2"></div>
+
+    <div class="hero-scroll-hint">
+      <div class="hero-scroll-line"></div>
+      <div class="hero-scroll-label">Scroll</div>
     </div>
+
+    <div class="hero-left">
+      <div class="hero-eyebrow" id="hero-eyebrow">Portfolio</div>
+
+      <h1 class="hero-name" id="hero-name">
+        <div class="hero-name-pablo" id="hero-name-pablo">
+          <span style="transition-delay:0.15s">P</span><span style="transition-delay:0.19s">A</span><span style="transition-delay:0.23s">B</span><span style="transition-delay:0.27s">L</span><span style="transition-delay:0.31s">O</span>
+        </div>
+        <span class="hero-name-line"><span class="hero-name-inner" id="hero-name-1">
+          <span style="transition-delay:0.10s">M</span><span style="transition-delay:0.13s">A</span><span style="transition-delay:0.16s">T</span><span style="transition-delay:0.19s">Y</span><span style="transition-delay:0.22s">Á</span><span style="transition-delay:0.25s">Š</span>
+        </span></span>
+        <span class="hero-name-line"><span class="hero-name-inner" id="hero-name-2">
+          <span style="transition-delay:0s">H</span><span style="transition-delay:0.03s">O</span><span style="transition-delay:0.06s">L</span><span style="transition-delay:0.09s">B</span><span style="transition-delay:0.12s">A</span>
+        </span></span>
+      </h1>
+
+      <div class="hero-bottom">
+        <div class="hero-descriptor" id="hero-descriptor">
+          <span>Student</span>
+          <span class="hero-sep">—</span>
+          <span>Developer</span>
+          <span class="hero-sep">—</span>
+          <span>Builder</span>
+        </div>
+        <div class="hero-meta" id="hero-meta">
+          <div class="hero-meta-item">
+            <div class="hero-meta-label">Věk</div>
+            <div class="hero-meta-value" id="hero-age">20</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hero-meta-label">Škola</div>
+            <div class="hero-meta-value">GMK</div>
+          </div>
+          <div class="hero-meta-item">
+            <div class="hero-meta-label">Lokace</div>
+            <div class="hero-meta-value">ČR</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-photo-col">
+      <div class="hero-photo-frame" id="hero-photo-frame">
+        <div class="hero-photo-corner"></div>
+        <img src="photos/profile picture.webp" alt="Matyáš Holba" loading="eager">
+        <div class="hero-photo-badge">
+          <div class="hero-photo-dot"></div>
+          <span>Matyáš Holba · Developer</span>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-<!-- ═══════════════════════════════════ -->
 
-<!-- ═══ FRAME SCENE (scroll animation) ═══
-     To disable this entirely, remove #frame-scene div and delete scene JS block below -->
-<main style="position:relative; z-index:20; background:var(--bg);">
-    <!-- Hero -->
-    <div class="hero" id="hero">
-        <div class="hero-label" id="hero-label">Portfolio</div>
-        <p class="motto" id="motto-text"></p>
-        <p class="hero-sub" id="hero-sub"></p>
+<!-- Scroll animation scene -->
+<div id="fixed-canvas-container">
+  <div id="scene-bg"></div>
+  <video id="vid-layer1" muted playsinline preload="auto" style="display:none"></video>
+  <video id="vid-layer2" muted playsinline preload="auto" style="display:none"></video>
+  <canvas id="frame-canvas" style="width:100%;height:100vh;object-fit:cover;mask-image:linear-gradient(to bottom,black 85%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,black 85%,transparent 100%);"></canvas>
+  <div id="scene-bg-text"></div>
+</div>
+
+<!-- Main content -->
+<main id="main-content">
+
+  <div class="smoke-bg-overlay" id="smoke-bg-overlay"></div>
+
+  <div id="cards-container">
+
+    <!-- CARD 1: O mně & Cíle -->
+    <div class="hologram-card" id="card-about">
+      <div class="hologram-card-content">
+        <section id="about">
+          <div class="section">
+            <div class="sec-header reveal">
+              <span class="sec-num" id="about-num">01</span>
+              <span class="sec-title">O mně</span>
+              <div class="sec-line"></div>
+            </div>
+            <div class="about-grid">
+              <div class="about-left">
+                <p class="about-pull reveal" id="about-pull">Stavím věci,<br>které <span class="highlight">fungují.</span></p>
+                <p class="about-bio reveal" id="bio-text"></p>
+                <div class="about-stats stagger-children" id="about-stats"></div>
+              </div>
+              <div class="about-right reveal">
+                <div class="about-right-inner">
+                  <div class="about-image-placeholder" id="about-image"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="goals" style="display:none">
+          <div class="section">
+            <div class="sec-header reveal">
+              <span class="sec-num" id="goals-num">02</span>
+              <span class="sec-title">Cíle</span>
+              <div class="sec-line"></div>
+            </div>
+            <div class="goals-wrap" id="goals-list"></div>
+          </div>
+        </section>
+      </div>
     </div>
 
-    <!-- O mně -->
-    <section id="about" class="reveal">
-        <div class="section-header">
-            <span class="section-number">01</span>
-            <h2>O mně</h2>
-            <div class="section-line"></div>
+    <!-- CARD 2: Projekty -->
+    <div class="hologram-card" id="card-projects">
+      <div class="hologram-card-content">
+        <section id="projects" style="display:none">
+          <div class="section">
+            <div class="sec-header reveal">
+              <span class="sec-num" id="projects-num">03</span>
+              <span class="sec-title">Projekty</span>
+              <div class="sec-line"></div>
+            </div>
+            <div class="projects-grid stagger-children" id="projects-grid"></div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <!-- CARD 3: Gaming & Feed -->
+    <div class="hologram-card" id="card-feed">
+      <div class="hologram-card-content">
+
+        <!-- Gaming -->
+        <div class="gaming-section">
+          <div class="gaming-inner">
+            <div class="gaming-grid">
+              <div class="gaming-text reveal">
+                <div class="gaming-label">Koníčky</div>
+                <div class="gaming-title">GAMER<br><span>AT HEART</span></div>
+                <p class="gaming-desc">Hraní videoher je prokletí, které rád přijímám. Counter-Strike 2 je moje hlavní hra — přes 1500 hodin na jednom účtu, celkem 6 účtů. Každý s minimálně 150 hodinami.</p>
+                <div class="gaming-stats-row">
+                  <div class="gaming-stat"><div class="gaming-stat-num" id="stat-cs2-hours">1572<span>h</span></div><div class="gaming-stat-label">CS2 hlavní</div></div>
+                  <div class="gaming-stat"><div class="gaming-stat-num" id="stat-steam-accounts">6</div><div class="gaming-stat-label">Steam účtů</div></div>
+                  <div class="gaming-stat"><div class="gaming-stat-num" id="stat-steam-friends">142</div><div class="gaming-stat-label">Steam přátel</div></div>
+                </div>
+              </div>
+              <div class="gaming-visual reveal">
+                <div class="gaming-screenshot">
+                  <img src="photos/cs2-stats.webp" alt="CS2 Stats" loading="lazy">
+                  <div class="gaming-screenshot-overlay"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <p class="bio-text" id="bio-text"></p>
-        <p class="tech-label">Technologie & nástroje</p>
-        <div class="tech-stack" id="tech-stack"></div>
-    </section>
 
-    <!-- Cíle -->
-    
+        <!-- Performance Carousel -->
+        <div class="perf-section">
+          <div class="perf-inner">
+            <div class="perf-carousel-container" id="perf-carousel">
+              <div class="perf-carousel-track" id="perf-track">
 
+                <!-- Slide 1: MonkeyType -->
+                <div class="perf-slide active">
+                  <div class="perf-grid">
+                    <div class="perf-text reveal">
+                      <div class="perf-label">Rychlost psaní</div>
+                      <div class="perf-title">TYPE<br><span>AT SPEED</span></div>
+                      <p class="perf-desc">Rychlost psaní je dovednost, kterou aktivně trénuji na MonkeyType. Každý den pár minut — a výsledky se dostavují. Píšu všemi deseti od začátku.</p>
+                      <div class="perf-stats-row">
+                        <div class="perf-stat"><div class="perf-stat-num">80<span>wpm</span></div><div class="perf-stat-label">Maximum</div></div>
+                        <div class="perf-stat"><div class="perf-stat-num">40<span>wpm</span></div><div class="perf-stat-label">Průměr</div></div>
+                        <div class="perf-stat"><div class="perf-stat-num">10<span>prst</span></div><div class="perf-stat-label">Všemi deseti</div></div>
+                      </div>
+                    </div>
+                    <div class="perf-visual reveal">
+                      <div class="perf-screenshot">
+                        <img src="photos/monkeytype-extension.webp" alt="MonkeyType" loading="lazy">
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
+                <!-- Slide 2: Duolingo -->
+                <div class="perf-slide">
+                  <div class="perf-grid">
+                    <div class="perf-text reveal">
+                      <div class="perf-label">Jazyky</div>
+                      <div class="perf-title">DUOLINGO<br><span>STREAK</span></div>
+                      <p class="perf-desc">Aktivní výuka cizích jazyků. Můj denní rituál pro udržení mozku v kondici. Zlepšuji se v angličtině, němčině a spoustě dalších jazyků.</p>
+                      <div class="perf-stats-row">
+                        <div class="perf-stat"><div class="perf-stat-num" id="duo-days">0<span>dnů</span></div><div class="perf-stat-label">V kuse</div></div>
+                        <div class="perf-stat"><div class="perf-stat-num" id="duo-xp">0<span>XP</span></div><div class="perf-stat-label">Zkušeností</div></div>
+                        <div class="perf-stat"><div class="perf-stat-num" id="duo-langs">0<span>liga</span></div><div class="perf-stat-label">Aktuální</div></div>
+                      </div>
+                    </div>
+                    <div class="perf-visual reveal">
+                      <div class="perf-screenshot" style="border-radius:12px;overflow:hidden;">
+                        <img src="duolingo me.jpeg" alt="Duolingo Me" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
-<section id="goals" class="reveal">
-        <div class="section-header">
-            <span class="section-number">02</span>
-            <h2>Dlouhodobé cíle</h2>
-            <div class="section-line"></div>
+              </div>
+              <div class="perf-controls reveal" style="justify-content:center;">
+                <div class="perf-dot active" data-slide="0"></div>
+                <div class="perf-dot" data-slide="1"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <ul class="goals-list" id="goals-list"></ul>
-    </section>
 
-    <!-- Projekty -->
-    <section id="projects" class="reveal">
-        <div class="section-header">
-            <span class="section-number">03</span>
-            <h2>Projekty</h2>
-            <div class="section-line"></div>
+        <!-- Setup -->
+        <div class="setup-section" id="setup">
+          <div class="setup-inner">
+            <div class="setup-header reveal">
+              <div>
+                <div class="setup-label">Hardware</div>
+                <div class="setup-title">MŮJ<br><span>SETUP</span></div>
+              </div>
+            </div>
+            <div class="setup-grid stagger-children">
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><path d="M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/><line x1="12" y1="16" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/></svg>
+                <div class="spec-name">Procesor</div>
+                <div class="spec-value">Intel Core i7-13400</div>
+                <div class="spec-sub">13. generace · 10 jader · 16 vláken</div>
+              </div>
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="2"/><path d="M6 9V7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2"/><line x1="6" y1="12" x2="6" y2="12.01"/><line x1="10" y1="12" x2="10" y2="12.01"/><line x1="14" y1="12" x2="14" y2="12.01"/><line x1="18" y1="12" x2="18" y2="12.01"/></svg>
+                <div class="spec-name">Paměť RAM</div>
+                <div class="spec-value">32 GB DDR4</div>
+                <div class="spec-sub">Dual channel</div>
+              </div>
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 4v16"/><circle cx="17" cy="9" r="1"/><circle cx="17" cy="14" r="1"/></svg>
+                <div class="spec-name">Úložiště</div>
+                <div class="spec-value">1.5 TB SSD</div>
+                <div class="spec-sub">+ 5 TB HDD zálohy</div>
+              </div>
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                <div class="spec-name">Displeje</div>
+                <div class="spec-value">2× 27" 2K</div>
+                <div class="spec-sub">180 Hz · dual monitor setup</div>
+              </div>
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+                <div class="spec-name">Internet</div>
+                <div class="spec-value">100 Mbps</div>
+                <div class="spec-sub">MikroTik Gigabit · průměr ~70 Mbps</div>
+              </div>
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+                <div class="spec-name">Grafická karta</div>
+                <div class="spec-value">NVIDIA RTX</div>
+                <div class="spec-sub">Ray tracing · DLSS · výkon pro kreativu</div>
+              </div>
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="16" width="20" height="4" rx="1"/><path d="M6 16V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"/></svg>
+                <div class="spec-name">Stůl</div>
+                <div class="spec-value">ASUS ROG 180 cm</div>
+                <div class="spec-sub">Výškově nastavitelný · 14 000 Kč</div>
+              </div>
+              <div class="spec-card">
+                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="9" cy="10" r="2"/><path d="M14 10h3"/></svg>
+                <div class="spec-name">Operační systémy</div>
+                <div class="spec-value">Win 11 + Linux</div>
+                <div class="spec-sub">Kali · Ubuntu · Arch · WSL2</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="projects-grid" id="projects-grid"></div>
-    </section>
 
-    <!-- Feed -->
-    <section id="feed" class="reveal">
-        <div class="section-header">
-            <span class="section-number">04</span>
-            <h2>Můj Feed</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="feed-list" id="feed-list"></div>
-    </section>
+        <!-- Feed -->
+        <section id="feed" style="display:none">
+          <div class="section">
+            <div class="sec-header reveal">
+              <span class="sec-num" id="feed-num">04</span>
+              <span class="sec-title">Feed</span>
+              <div class="sec-line"></div>
+            </div>
+            <div class="feed-list" id="feed-list"></div>
+          </div>
+        </section>
 
-    <!-- Galerie -->
-    <section id="gallery" class="reveal">
-        <div class="section-header">
-            <span class="section-number">05</span>
-            <h2>Galerie</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="gallery-grid" id="gallery-grid"></div>
-    </section>
+      </div>
+    </div>
 
-    <!-- Duolingo widget (hidden by default, shown when integration enabled) -->
-    <section id="duolingo-widget" class="reveal" style="display:none">
-        <div class="section-header">
-            <span class="section-number" id="duolingo-section-num">06</span>
-            <h2>Duolingo</h2>
-            <div class="section-line"></div>
-        </div>
-        <div class="duo-card" id="duo-card">
-            <div class="duo-loading">Načítám Duolingo statistiky...</div>
-        </div>
-    </section>
+    <!-- CARD 5: Galerie -->
+    <div class="hologram-card" id="card-gallery">
+      <div class="hologram-card-content">
+        <section id="gallery" style="display:none">
+          <div class="section-full">
+            <div class="section">
+              <div class="sec-header reveal">
+                <span class="sec-num" id="gallery-num">05</span>
+                <span class="sec-title">Galerie</span>
+                <div class="sec-line"></div>
+              </div>
+            </div>
+            <div class="gallery-container reveal" id="gallery-grid"></div>
+          </div>
+        </section>
+       </div>
+    </div>
+
+    <!-- CARD 5: Kontakt -->
+    <div class="hologram-card" id="card-contact">
+      <div class="hologram-card-content">
+        <section id="contact" style="display:none">
+          <div class="section">
+            <div class="sec-header reveal">
+              <span class="sec-num" id="contact-num">06</span>
+              <span class="sec-title">Kontakt</span>
+              <div class="sec-line"></div>
+            </div>
+            <div class="contact-card-inner">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+          <div class="contact-card-footer">
+            <div class="contact-footer-line"></div>
+            <div class="contact-footer-inner">
+              <span class="contact-footer-logo" id="contact-footer-logo">MATYÁŠ <span>HOLBA</span></span>
+              <span class="contact-footer-copy" id="contact-footer-copy">© 2026 · Všechna práva vyhrazena</span>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  </div><!-- /cards-container -->
+
+  <!-- Marquee (tech stack) fixed at bottom -->
+  <div class="marquee-section fixed-bottom" id="marquee-section">
+    <div class="marquee-track" id="marquee-track"></div>
+  </div>
+
+  <!-- Scroll ghost — height calculated by JS -->
+  <div id="scroll-ghost"></div>
+
 </main>
 
-<!-- Footer -->
-<footer id="links">
-    <div class="footer-inner">
-        <div class="footer-logo" id="footer-logo">MH</div>
-        <div class="social-links" id="social-links"></div>
-        <p class="copyright" id="copyright-text"></p>
-    </div>
-</footer>
 
-<script>
-    // ── SVG Icons ──────────────────────────────────────
-    const icons = {
-        github: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>`,
-        instagram: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>`,
-        mail: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>`,
-        link: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`,
-        goal: `<svg class="goal-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`
-    };
-
-    // ── Fetch & Render ─────────────────────────────────
-    async function loadData() {
-        try {
-            const res = await fetch('./data.json?' + Date.now());
-            if (!res.ok) throw new Error('Failed to load data.json');
-            return await res.json();
-        } catch (e) {
-            console.error('Error loading data.json:', e);
-            return null;
-        }
-    }
-
-    function renderNav(data) {
-        const logo = document.getElementById('nav-logo');
-        logo.textContent = data.meta.initials || data.meta.name;
-
-        const navLinks = document.getElementById('nav-links');
-        navLinks.innerHTML = '';
-        (data.meta.navLinks || []).forEach(link => {
-            const a = document.createElement('a');
-            a.href = link.href;
-            
-            // Apply Lando Norris Text Effect
-            const text = link.label || '';
-            a.setAttribute('aria-label', text);
-            a.classList.add('lando-link');
-            
-            const segmenter = new Intl.Segmenter('cs', { granularity: 'grapheme' });
-            const segments = Array.from(segmenter.segment(text)).map(s => s.segment);
-            
-            segments.forEach((char, index) => {
-                const container = document.createElement('span');
-                container.className = 'letter-container';
-                container.style.setProperty('--delay', `${index * 0.03}s`);
-                
-                const top = document.createElement('span');
-                top.className = 'letter-top';
-                top.textContent = char === ' ' ? '\u00A0' : char;
-                
-                const bottom = document.createElement('span');
-                bottom.className = 'letter-bottom';
-                bottom.textContent = char === ' ' ? '\u00A0' : char;
-                
-                container.appendChild(top);
-                container.appendChild(bottom);
-                a.appendChild(container);
-            });
-            navLinks.appendChild(a);
-        });
-    }
-
-    function renderHero(data) {
-        document.title = `${data.meta.name} — Portfolio`;
-        document.getElementById('hero-label').textContent = data.meta.name;
-        document.getElementById('motto-text').innerHTML = `&ldquo;${data.meta.motto}&rdquo;`;
-        document.getElementById('hero-sub').textContent = data.meta.location || '';
-        document.getElementById('footer-logo').textContent = data.meta.initials || data.meta.name;
-    }
-
-    function renderAbout(data) {
-        document.getElementById('bio-text').textContent = data.meta.bio;
-        const stack = document.getElementById('tech-stack');
-        stack.innerHTML = '';
-        (data.techStack || []).forEach(tech => {
-            const b = document.createElement('div');
-            b.className = 'tech-badge';
-            b.textContent = tech;
-            stack.appendChild(b);
-        });
-    }
-
-    function renderGoals(data) {
-        const list = document.getElementById('goals-list');
-        list.innerHTML = '';
-        (data.goals || []).forEach(goal => {
-            const li = document.createElement('li');
-            li.innerHTML = `${icons.goal}<span>${goal}</span>`;
-            list.appendChild(li);
-        });
-    }
-
-    function renderProjects(data) {
-        const grid = document.getElementById('projects-grid');
-        grid.innerHTML = '';
-        (data.projects || []).forEach(proj => {
-            const card = document.createElement('div');
-            card.className = 'project-card';
-            card.id = `project-${proj.id}`;
-
-            const featuresHTML = (proj.features || []).map(f =>
-                `<li>${f}</li>`
-            ).join('');
-
-            const tagsHTML = (proj.tags || []).map(t =>
-                `<span class="project-tag">${t}</span>`
-            ).join('');
-
-            const linkHTML = proj.link
-                ? `<a href="${proj.link}" class="project-link" target="_blank" rel="noopener">${icons.link} Zobrazit projekt</a>`
-                : '';
-
-            card.innerHTML = `
-                <div class="project-header">
-                    <h3>${proj.title}</h3>
-                    ${proj.status === 'active' ? '<span class="project-status active">Aktivní</span>' : ''}
-                </div>
-                ${proj.description ? `<p class="project-description">${proj.description}</p>` : ''}
-                <ul class="project-features">${featuresHTML}</ul>
-                <div class="project-tags">${tagsHTML}</div>
-                ${linkHTML}
-            `;
-
-            // Mouse glow effect
-            card.addEventListener('mousemove', e => {
-                const rect = card.getBoundingClientRect();
-                const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-                const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
-                card.style.setProperty('--mx', x + '%');
-                card.style.setProperty('--my', y + '%');
-            });
-
-            grid.appendChild(card);
-        });
-    }
-
-    function renderFeed(data) {
-        const list = document.getElementById('feed-list');
-        list.innerHTML = '';
-        (data.feed || []).forEach(item => {
-            const div = document.createElement('div');
-            div.className = 'feed-item';
-            div.id = `feed-${item.id}`;
-
-            const photoHTML = item.photo
-                ? `<div class="feed-photo"><img src="${item.photo}" alt="Feed fotka" loading="lazy"></div>`
-                : '';
-
-            div.innerHTML = `
-                <div class="feed-date">${item.date}</div>
-                <div class="feed-content">
-                    <p class="feed-text">${item.text}</p>
-                    ${photoHTML}
-                </div>
-            `;
-            list.appendChild(div);
-        });
-    }
-
-    function renderGallery(data) {
-        const grid = document.getElementById('gallery-grid');
-        grid.innerHTML = '';
-        if (!data.gallery || data.gallery.length === 0) {
-            grid.innerHTML = '<p class="gallery-empty">Galerie bude brzy doplněna.</p>';
-            return;
-        }
-
-        const layout = data.galleryLayout || 'default';
-
-        if (layout === 'dynamic') {
-            grid.className = 'gallery-dynamic';
-            
-            const items = data.gallery;
-            grid.style.setProperty('--row-count', Math.ceil(items.length / 3));
-            const rowSize = 3;
-            for (let i = 0; i < items.length; i += rowSize) {
-                const rowItems = items.slice(i, i + rowSize);
-                const rowDiv = document.createElement('div');
-                rowDiv.className = 'row';
-                
-                rowItems.forEach(img => {
-                    const cellDiv = document.createElement('div');
-                    cellDiv.className = 'cell';
-                    
-                    const cardDiv = document.createElement('div');
-                    cardDiv.className = 'card';
-                    
-                    const image = document.createElement('img');
-                    image.src = img.src;
-                    image.alt = img.caption || '';
-                    image.loading = 'lazy';
-                    
-                    const captionDiv = document.createElement('div');
-                    captionDiv.className = 'caption';
-                    captionDiv.textContent = img.caption || '';
-                    
-                    cardDiv.appendChild(image);
-                    cardDiv.appendChild(captionDiv);
-                    
-                    cardDiv.addEventListener('click', () => openLightbox(img.src, img.caption));
-                    cardDiv.setAttribute('role', 'button');
-                    cardDiv.setAttribute('tabindex', '0');
-                    cardDiv.addEventListener('keydown', e => {
-                        if (e.key === 'Enter') openLightbox(img.src, img.caption);
-                    });
-                    
-                    cellDiv.appendChild(cardDiv);
-                    rowDiv.appendChild(cellDiv);
-                });
-                grid.appendChild(rowDiv);
-            }
-        } else {
-            grid.className = 'gallery-grid';
-            data.gallery.forEach(img => {
-                const item = document.createElement('div');
-                item.className = 'gallery-item';
-                item.setAttribute('data-caption', img.caption || '');
-                item.setAttribute('data-src', img.src);
-                item.setAttribute('role', 'button');
-                item.setAttribute('tabindex', '0');
-                item.innerHTML = `<img src="${img.src}" alt="${img.caption || ''}" loading="lazy">`;
-                item.addEventListener('click', () => openLightbox(img.src, img.caption));
-                item.addEventListener('keydown', e => {
-                    if (e.key === 'Enter') openLightbox(img.src, img.caption);
-                });
-                grid.appendChild(item);
-            });
-        }
-    }
-
-    function renderFooter(data) {
-        const socials = document.getElementById('social-links');
-        socials.innerHTML = '';
-        (data.socials || []).forEach(s => {
-            const a = document.createElement('a');
-            a.href = s.url;
-            a.className = 'social-link';
-            a.target = '_blank';
-            a.rel = 'noopener noreferrer';
-            a.id = `social-${s.id}`;
-            a.innerHTML = `${icons[s.icon] || ''} ${s.label}`;
-            socials.appendChild(a);
-        });
-
-        document.getElementById('copyright-text').textContent =
-            `© ${data.meta.copyright} Všechna práva vyhrazena.`;
-    }
-
-    // ── Lightbox ───────────────────────────────────────
-    function openLightbox(src, caption) {
-        document.getElementById('lightboxImg').src = src;
-        document.getElementById('lightboxCaption').textContent = caption || '';
-        document.getElementById('lightbox').classList.add('open');
-        document.body.style.overflow = 'hidden';
-    }
-
-    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
-    document.getElementById('lightbox').addEventListener('click', e => {
-        if (e.target === e.currentTarget) closeLightbox();
-    });
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') closeLightbox();
-    });
-
-    function closeLightbox() {
-        document.getElementById('lightbox').classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    // ── Scroll: Nav active + header ────────────────────
-    function setupScrollEffects() {
-        const header = document.getElementById('header');
-        const sections = document.querySelectorAll('section[id], div[id="hero"]');
-        const navLinks = document.querySelectorAll('.nav-links a');
-
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const id = entry.target.id;
-                    navLinks.forEach(a => {
-                        a.classList.toggle('active', a.getAttribute('href') === '#' + id);
-                    });
-                }
-            });
-        }, { rootMargin: '-30% 0px -60% 0px' });
-
-        sections.forEach(s => observer.observe(s));
-
-        window.addEventListener('scroll', () => {
-            header.classList.toggle('scrolled', window.scrollY > 20);
-        });
-    }
-
-    // ── Reveal on scroll ───────────────────────────────
-    function setupReveal() {
-        const observer = new IntersectionObserver(entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.08 });
-
-        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-    }
-
-    // ── Smooth nav scroll ──────────────────────────────
-    function setupNavScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-                const target = document.querySelector(a.getAttribute('href'));
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-    }
-
-    // ── Init ───────────────────────────────────────────
-    async function init() {
-        const data = await loadData();
-
-        if (data) {
-            renderNav(data);
-            renderHero(data);
-            
-            // Section visibility
-            const vis = (data.sections || {});
-            const hide = (id) => {
-                const el = document.getElementById(id);
-                if (el) el.style.display = 'none';
-            };
-            if (vis.about    === false) hide('about');
-            if (vis.goals    === false) hide('goals');
-            if (vis.projects === false) hide('projects');
-            if (vis.feed     === false) hide('feed');
-            if (vis.gallery  === false) hide('gallery');
-            
-            renderAbout(data);
-            renderGoals(data);
-            renderProjects(data);
-            renderFeed(data);
-            renderGallery(data);
-            renderFooter(data);
-            
-            // Renumber visible sections
-            let sectionNum = 1;
-            ['about','goals','projects','feed','gallery'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el && el.style.display !== 'none') {
-                    const numEl = el.querySelector('.section-number');
-                    if (numEl) numEl.textContent = String(sectionNum).padStart(2, '0');
-                    sectionNum++;
-                }
-            });
-            
-            // Duolingo integration
-            if (data.integrations && data.integrations.duolingo && data.integrations.duolingo.enabled) {
-                const duoSection = document.getElementById('duolingo-widget');
-                if (duoSection) {
-                    duoSection.style.display = '';
-                    const numEl = duoSection.querySelector('.section-number');
-                    if (numEl) numEl.textContent = String(sectionNum).padStart(2, '0');
-                    loadDuolingo(data.integrations.duolingo.username);
-                }
-            }
-            // Configure & populate the scroll animation scene
-            if (window.configureScene)    window.configureScene(data.animation || {});
-            if (window.buildSceneProjects) window.buildSceneProjects(data.projects || [], data.animation || {});
-        }
-
-        // Hide loader
-        const loader = document.getElementById('loading');
-        loader.classList.add('hidden');
-        setTimeout(() => loader.remove(), 500);
-
-        setupScrollEffects();
-        setupReveal();
-        setupNavScroll();
-    }
-
-    init();
-
-</script>
-
-<script>
-(function() {
-    let configureSceneCalled = false;
-    // Disable browser scroll restoration to prevent jumps and desynchronization on reload
-    if ('scrollRestoration' in history) {
-        history.scrollRestoration = 'manual';
-    }
-    window.scrollTo(0, 0);
-
-    // ── Config ──
-    let carouselSpeedDeg = 0.25;
-    let hologramType     = 'carousel';
-    let hologramYOffset  = 48;
-    let hologramConfig   = {};
-    let sceneEnabled     = true;
-
-    const canvas  = document.getElementById('frame-canvas');
-    const ctx     = canvas.getContext('2d');
-    const scene   = document.getElementById('frame-scene');
-    const hint    = document.getElementById('scene-scroll-hint');
-    const projBox = document.getElementById('scene-projects');
-    const header  = document.getElementById('header');
-    const vidL1   = document.getElementById('vid-layer1');
-    const vidL2   = document.getElementById('vid-layer2');
-
-    let frames1 = [];   // ImageBitmap[] decoded from layer1
-    let frames2 = [];   // ImageBitmap[] decoded from layer2
-    let ready   = false;
-    let currentFrameIdx = 0;
-
-    function resizeCanvas() {
-        canvas.width  = window.innerWidth;
-        canvas.height = window.innerHeight;
-    }
-    resizeCanvas();
-
-    let sceneProjectsBuilt = false;
-    let sceneDone          = false;
-    let carouselVisible    = false;
-    let carouselAngle      = 0;
-
-    // ── Mouse/touch parallax ──
-    let mtx = 0, mty = 0, mcx = 0, mcy = 0;
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let smx = mx, smy = my;
-    let isHovering = false;
-
-    document.addEventListener('mousemove', e => {
-        mtx = (e.clientX / window.innerWidth  - 0.5) * 2;
-        mty = (e.clientY / window.innerHeight - 0.5) * 2;
-        mx = e.clientX; my = e.clientY;
-    });
-    document.addEventListener('touchmove', e => {
-        if (e.touches.length > 0) {
-            const t = e.touches[0];
-            mtx = (t.clientX / window.innerWidth  - 0.5) * 2;
-            mty = (t.clientY / window.innerHeight - 0.5) * 2;
-            mx = t.clientX; my = t.clientY;
-            isHovering = true;
-        }
-    }, {passive: true});
-    document.addEventListener('touchend', () => { isHovering = false; });
-    scene.addEventListener('mouseenter', () => { isHovering = true; });
-    scene.addEventListener('mouseleave', () => { isHovering = false; });
-    document.addEventListener('mouseleave', () => { mtx = 0; mty = 0; mx = window.innerWidth/2; my = window.innerHeight/2; });
-
-    // ── rAF loop ──
-    function rafLoop(time) {
-        requestAnimationFrame(rafLoop);
-
-        mcx += (mtx - mcx) * 0.055;
-        mcy += (mty - mcy) * 0.055;
-        smx += (mx - smx) * 0.12;
-        smy += (my - smy) * 0.12;
-
-        const t = time / 1000;
-        const idleY     = Math.sin(t * 0.62) * 3.2;
-        const idleScale = 1.15 + Math.sin(t * 0.41) * 0.0038;
-        const idleTiltX = Math.sin(t * 0.28) * 0.4;
-
-        const rotY   = mcx * 0.5 + idleTiltX;
-        const transX = -mcx * 5;
-        const transY = idleY - mcy * 5;
-
-        canvas.style.transform =
-            `perspective(1400px) rotateY(${rotY}deg) rotateX(0deg) ` +
-            `translate(${transX}px, ${transY}px) scale(${idleScale})`;
-        projBox.style.transform = `translate(${transX}px, ${transY}px) scale(${idleScale})`;
-
-        if (carouselVisible) { carouselAngle += carouselSpeedDeg; renderCarousel(); }
-
-        if (!ready || !frames1.length) return;
-
-        const frame1 = frames1[currentFrameIdx];
-        if (!frame1) return;
-
-        // Fit image: always fill full width
-        const ar = frame1.width / frame1.height;
-        let drawW = canvas.width;
-        let drawH = drawW / ar;
-        if (drawH < canvas.height) { drawH = canvas.height; drawW = drawH * ar; }
-
-        // Apply custom zoom/scale based on config
-        const isMobile = window.innerWidth < 768;
-        const scale = isMobile 
-            ? (hologramConfig.frameMobileScale !== undefined ? parseFloat(hologramConfig.frameMobileScale) : 1.0) 
-            : (hologramConfig.frameScale !== undefined ? parseFloat(hologramConfig.frameScale) : 1.0);
-        
-        drawW = drawW * scale;
-        drawH = drawH * scale;
-
-        const drawX = (canvas.width  - drawW) / 2;
-        const drawY = (canvas.height - drawH) / 2;
-
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(frame1, drawX, drawY, drawW, drawH);
-
-        // Update hologram Y position
-        const holY = drawY + drawH * (hologramYOffset / 100);
-        projBox.style.top    = `${holY}px`;
-        projBox.style.bottom = 'auto';
-
-        // Hacker bubble (layer 2) on hover
-        if (isHovering && frames2.length) {
-            const frame2 = frames2[Math.min(currentFrameIdx, frames2.length - 1)];
-            if (frame2) {
-                const numPoints = 8;
-                const baseRadius = Math.min(canvas.width, canvas.height) * 0.22;
-                const points = [];
-                ctx.save();
-                for (let i = 0; i < numPoints; i++) {
-                    const angle = (i / numPoints) * Math.PI * 2;
-                    const rOff  = Math.sin(t * 2.5 + i * 2) * (baseRadius * 0.1)
-                                + Math.cos(t * 1.8 - i)     * (baseRadius * 0.06);
-                    points.push({
-                        x: smx + Math.cos(angle) * (baseRadius + rOff),
-                        y: smy + Math.sin(angle) * (baseRadius + rOff)
-                    });
-                }
-                ctx.beginPath();
-                for (let i = 0; i <= numPoints; i++) {
-                    const p1  = points[i % numPoints];
-                    const p2  = points[(i + 1) % numPoints];
-                    const mx2 = (p1.x + p2.x) / 2;
-                    const my2 = (p1.y + p2.y) / 2;
-                    if (i === 0) {
-                        const lp = points[numPoints - 1];
-                        ctx.moveTo((lp.x + p1.x) / 2, (lp.y + p1.y) / 2);
-                    }
-                    ctx.quadraticCurveTo(p1.x, p1.y, mx2, my2);
-                }
-                ctx.closePath();
-                ctx.clip();
-                ctx.fillStyle = '#050507';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(frame2, drawX, drawY, drawW, drawH);
-                ctx.restore();
-            }
-        }
-    }
-    requestAnimationFrame(rafLoop);
-
-    // ── Pre-decode video into ImageBitmap array ──
-    async function decodeVideo(vid, totalFrames, targetDuration, onProgress) {
-        return new Promise((resolve) => {
-            const bitmaps = [];
-            let isResolved = false;
-
-            const finish = () => {
-                if (isResolved) return;
-                isResolved = true;
-                vid.pause();
-
-                // Pad the bitmaps array if watchdog fired or seek failed
-                while (bitmaps.length < totalFrames) {
-                    if (bitmaps.length > 0) {
-                        bitmaps.push(bitmaps[bitmaps.length - 1]);
-                    } else {
-                        break;
-                    }
-                }
-                if (bitmaps.length > totalFrames) {
-                    bitmaps.length = totalFrames;
-                }
-
-                // Repair any null frames (e.g. if first frame failed to decode)
-                let firstValid = null;
-                for (let j = 0; j < bitmaps.length; j++) {
-                    if (bitmaps[j] !== null) {
-                        firstValid = bitmaps[j];
-                        break;
-                    }
-                }
-                for (let j = 0; j < bitmaps.length; j++) {
-                    if (bitmaps[j] === null) {
-                        bitmaps[j] = firstValid;
-                    }
-                }
-
-                resolve(bitmaps);
-            };
-
-            // Watchdog: force finish if seek gets stuck (2.5 seconds)
-            let watchdog;
-            const resetWatchdog = () => {
-                clearTimeout(watchdog);
-                watchdog = setTimeout(finish, 2500);
-            };
-            resetWatchdog();
-
-            vid.pause();
-            let i = 0;
-
-            const seekNext = () => {
-                if (isResolved) return;
-                resetWatchdog();
-                if (i >= totalFrames) { finish(); return; }
-
-                vid.onseeked = async () => {
-                    if (isResolved) return;
-                    try {
-                        const bmp = await createImageBitmap(vid);
-                        bitmaps.push(bmp);
-                    } catch(e) {
-                        console.warn("createImageBitmap failed at frame", i, e);
-                        if (bitmaps.length > 0) {
-                            bitmaps.push(bitmaps[bitmaps.length - 1]);
-                        } else {
-                            bitmaps.push(null);
-                        }
-                    }
-                    onProgress && onProgress(i / totalFrames);
-                    i++;
-                    seekNext();
-                };
-
-                // Calculate the exact timestamp, clamping it safely
-                const targetTime = (i / (totalFrames - 1 || 1)) * targetDuration;
-                vid.currentTime = Math.min(targetTime, vid.duration - 0.02);
-            };
-            seekNext();
-        });
-    }
-
-    // ── Loading overlay ──
-    let loadOverlay = null;
-    function showLoadOverlay() {
-        loadOverlay = document.createElement('div');
-        loadOverlay.id = 'scene-load-overlay';
-        loadOverlay.style.cssText = [
-            'position:fixed;inset:0;background:#fff;z-index:9999',
-            'display:flex;flex-direction:column;align-items:center;justify-content:center',
-            'font-family:inherit;gap:18px;transition:opacity 0.5s'
-        ].join(';');
-        loadOverlay.innerHTML = `
-            <div style="font-size:13px;font-weight:600;letter-spacing:0.1em;color:#111;text-transform:uppercase">
-                Načítám animaci
-            </div>
-            <div style="width:220px;height:3px;background:#eee;border-radius:2px;overflow:hidden">
-                <div id="scene-load-bar" style="height:100%;background:#111;width:0%;border-radius:2px;transition:width 0.1s"></div>
-            </div>
-            <div id="scene-load-pct" style="font-size:12px;color:#888">0%</div>`;
-        document.body.appendChild(loadOverlay);
-    }
-    function updateLoadProgress(pct) {
-        const bar = document.getElementById('scene-load-bar');
-        const lbl = document.getElementById('scene-load-pct');
-        if (bar) bar.style.width = Math.round(pct * 100) + '%';
-        if (lbl) lbl.textContent = Math.round(pct * 100) + '%';
-    }
-    function hideLoadOverlay() {
-        if (!loadOverlay) return;
-        loadOverlay.style.opacity = '0';
-        setTimeout(() => loadOverlay && loadOverlay.remove(), 550);
-    }
-
-    // ── Main init: load + decode ──
-    async function loadFrameImages(layer, totalFrames, onProgress, cacheVersion = 'default') {
-        const folderName = layer === 1 ? 'first_layer' : 'second_layer';
-        const bitmaps = new Array(totalFrames);
-        let loaded = 0;
-
-        let cache = null;
-        try {
-            cache = await caches.open('frames-cache-' + cacheVersion);
-        } catch (e) {
-            console.warn('Cache Storage not available:', e);
-        }
-
-        return new Promise((resolve) => {
-            const checkDone = () => {
-                if (loaded === totalFrames) {
-                    resolve(bitmaps);
-                }
-            };
-
-            for (let i = 0; i < totalFrames; i++) {
-                const frameName = 'frame_' + String(i).padStart(4, '0') + '.png';
-                const url = `frames/${folderName}/${frameName}`;
-
-                const loadSingle = async () => {
-                    let blob = null;
-                    if (cache) {
-                        try {
-                            const cachedResponse = await cache.match(url);
-                            if (cachedResponse) {
-                                blob = await cachedResponse.blob();
-                            }
-                        } catch (e) {
-                            console.warn('Cache read error:', e);
-                        }
-                    }
-
-                    const img = new Image();
-
-                    img.onload = async () => {
-                        try {
-                            const bmp = await createImageBitmap(img);
-                            bitmaps[i] = bmp;
-                        } catch (e) {
-                            bitmaps[i] = img;
-                        }
-                        if (blob) {
-                            URL.revokeObjectURL(img.src);
-                        }
-                        loaded++;
-                        onProgress && onProgress(loaded / totalFrames);
-                        checkDone();
-                    };
-
-                    img.onerror = () => {
-                        bitmaps[i] = null;
-                        loaded++;
-                        onProgress && onProgress(loaded / totalFrames);
-                        checkDone();
-                    };
-
-                    if (blob) {
-                        img.src = URL.createObjectURL(blob);
-                    } else {
-                        img.src = url;
-                        if (cache) {
-                            fetch(url).then(res => {
-                                if (res.ok) cache.put(url, res.clone());
-                            }).catch(() => {});
-                        }
-                    }
-                };
-
-                loadSingle();
-            }
-        });
-    }
-
-    async function initAnimation(cfg) {
-        showLoadOverlay();
-
-        const mode = cfg.animationMode || 'mp4';
-        const totalFrames = cfg.totalFrames || 93;
-        const cacheVersion = cfg.cacheVersion || 'default';
-
-        // Clear old caches if version mismatch
-        try {
-            const keys = await caches.keys();
-            for (const key of keys) {
-                if (key.startsWith('frames-cache-') && key !== `frames-cache-${cacheVersion}`) {
-                    await caches.delete(key);
-                }
-            }
-        } catch (e) {
-            console.warn('Failed to clear old caches:', e);
-        }
-
-        if (mode === 'frames') {
-            let loaded1 = 0;
-            let loaded2 = 0;
-            const total = totalFrames * 2;
-            
-            const updateOverallProgress = () => {
-                const totalLoaded = loaded1 + loaded2;
-                updateLoadProgress(totalLoaded / total);
-            };
-
-            const [f1, f2] = await Promise.all([
-                loadFrameImages(1, totalFrames, p => {
-                    loaded1 = Math.round(p * totalFrames);
-                    updateOverallProgress();
-                }, cacheVersion),
-                loadFrameImages(2, totalFrames, p => {
-                    loaded2 = Math.round(p * totalFrames);
-                    updateOverallProgress();
-                }, cacheVersion)
-            ]);
-            
-            frames1 = f1;
-            frames2 = f2;
-        } else {
-            // Set sources
-            const src1 = cfg.layer1Video ? `frames/${cfg.layer1Video}` : 'frames/1.mp4';
-            const src2 = cfg.layer2Video ? `frames/${cfg.layer2Video}` : 'frames/2.mp4';
-            vidL1.src = src1;
-            vidL2.src = src2;
-
-            // Wait for metadata
-            await Promise.all([
-                new Promise(r => { if (vidL1.readyState >= 1) r(); else vidL1.onloadedmetadata = r; }),
-                new Promise(r => { if (vidL2.readyState >= 1) r(); else vidL2.onloadedmetadata = r; })
-            ]);
-
-            const duration = Math.max(vidL1.duration || 1, vidL2.duration || 1);
-            const fps = 24; // Use 24 frames per second
-            const totalVidFrames = Math.round(duration * fps);
-
-            // Decode layer 1 (progress 0→0.5)
-            frames1 = await decodeVideo(vidL1, totalVidFrames, duration, p => updateLoadProgress(p * 0.5));
-
-            // Decode layer 2 (progress 0.5→1)
-            frames2 = await decodeVideo(vidL2, totalVidFrames, duration, p => updateLoadProgress(0.5 + p * 0.5));
-        }
-
-        // Fill empty/null frames in frames1 and frames2 if any failed
-        const repairArray = (arr, size) => {
-            while (arr.length < size) {
-                if (arr.length > 0) arr.push(arr[arr.length - 1]);
-                else break;
-            }
-            if (arr.length > size) {
-                arr.length = size;
-            }
-            let firstValid = null;
-            for (let j = 0; j < arr.length; j++) {
-                if (arr[j]) { firstValid = arr[j]; break; }
-            }
-            for (let j = 0; j < arr.length; j++) {
-                if (!arr[j]) arr[j] = firstValid;
-            }
-        };
-        repairArray(frames1, frames1.length || totalFrames);
-        repairArray(frames2, frames2.length || totalFrames);
-
-        ready = true;
-        updateLoadProgress(1);
-        hideLoadOverlay();
-        onScroll(); // trigger first draw
-    }
-
-    // ── 3D Mill carousel ──
-    function renderCarousel() {
-        const cards = projBox.querySelectorAll('.scene-proj-card, .scene-holo-card');
-        const n = cards.length;
-        if (!n) return;
-        const step = 360 / n;
-        const isMobile = window.innerWidth < 768;
-        const R = isMobile ? 120 : 200;
-        cards.forEach((card, i) => {
-            const ang = (carouselAngle + i * step) % 360;
-            const rad = ang * Math.PI / 180;
-            const x   = Math.sin(rad) * R;
-            const z   = Math.cos(rad) * R;
-            const tz  = (z + R) / (2 * R);
-            const base = isMobile ? 0.75 : 1.0;
-            const sc  = base * (0.15 + tz * 0.85);
-            const op  = tz > 0.3 ? Math.min(1, (tz - 0.3) * 1.4) : 0;
-            card.style.transform     = `translateX(${x}px) translateZ(${z}px) scale(${sc})`;
-            card.style.opacity       = op;
-            card.style.zIndex        = Math.round(tz * 100);
-            card.style.pointerEvents = tz > 0.65 ? 'auto' : 'none';
-        });
-    }
-
-    // ── Build projects ──
-    window.buildSceneProjects = function(projects, animCfg) {
-        const cfg = Object.assign({}, hologramConfig, animCfg || {});
-        if (Array.isArray(animCfg)) cfg.selectedProjects = animCfg;
-        if (sceneProjectsBuilt) return;
-        sceneProjectsBuilt = true;
-        projBox.innerHTML = '';
-        const hType = cfg.hologramType || 'carousel';
-        if (hType === 'none') return;
-        if (hType === 'text') {
-            const card = document.createElement('div');
-            card.className = 'scene-holo-card scene-holo-text';
-            card.innerHTML = `<div class="sh-main">${cfg.hologramText || 'Hello World'}</div>
-                ${cfg.hologramSubtext ? `<div class="sh-sub">${cfg.hologramSubtext}</div>` : ''}`;
-            projBox.appendChild(card);
-            projBox.classList.add('visible');
-            return;
-        }
-        if (hType === 'single_project') {
-            const p = (projects || []).find(x => x.id === cfg.singleProjectId) || (projects || [])[0];
-            if (!p) return;
-            const card = document.createElement('div');
-            card.className = 'scene-proj-card';
-            card.innerHTML = `<div class="sp-num">Projekt</div><div class="sp-title">${p.title || ''}</div>
-                ${(p.tags||[])[0] ? `<div class="sp-tag">${(p.tags||[])[0]}</div>` : ''}`;
-            card.addEventListener('click', () => {
-                window.scrollTo({ top: scene.offsetHeight, behavior:'smooth' });
-                setTimeout(() => { const el = document.getElementById(`project-${p.id}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }, 600);
-            });
-            projBox.appendChild(card); projBox.classList.add('visible'); return;
-        }
-        let toShow = projects || [];
-        const selIds = cfg.selectedProjects || [];
-        if (selIds.length > 0) {
-            const ordered = selIds.map(id => toShow.find(p => p.id === id)).filter(Boolean);
-            if (ordered.length > 0) toShow = ordered;
-        }
-        toShow = toShow.slice(0, 8);
-        if (!toShow.length) return;
-        toShow.forEach((p, i) => {
-            const a = document.createElement('a');
-            a.className = 'scene-proj-card'; a.href = `#project-${p.id}`;
-            a.innerHTML = `<div class="sp-num">Projekt ${String(i+1).padStart(2,'0')}</div>
-                <div class="sp-title">${p.title || ''}</div>
-                ${(p.tags||[])[0] ? `<div class="sp-tag">${(p.tags||[])[0]}</div>` : ''}`;
-            a.addEventListener('click', e => {
-                e.preventDefault();
-                window.scrollTo({ top: scene.offsetHeight, behavior:'smooth' });
-                setTimeout(() => { const el = document.getElementById(`project-${p.id}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); }, 600);
-            });
-            projBox.appendChild(a);
-        });
-        renderCarousel();
-    };
-
-    // ── Scroll handler ──
-    function lerp(a, b, t) { return a + (b - a) * t; }
-
-    function getHologramRange() {
-        const hType = hologramConfig.hologramType || 'carousel';
-        let sFrame, eFrame;
-        if (hType === 'single_project') { sFrame = hologramConfig.singleStart ?? 50; eFrame = hologramConfig.singleEnd ?? 80; }
-        else if (hType === 'text')      { sFrame = hologramConfig.textStart    ?? 50; eFrame = hologramConfig.textEnd   ?? 80; }
-        else                            { sFrame = hologramConfig.cardsStart   ?? 50; eFrame = hologramConfig.cardsEnd  ?? 80; }
-        const maxF = hologramConfig.totalFrames || 92;
-        return { s: sFrame / maxF, e: eFrame / maxF };
-    }
-
-    function onScroll() {
-        if (!sceneEnabled) return;
-        const sceneH   = scene.offsetHeight - window.innerHeight;
-        const scrolled = Math.min(Math.max(-scene.getBoundingClientRect().top, 0), sceneH);
-        const progress = sceneH > 0 ? scrolled / sceneH : 0;
-
-        // Map scroll progress → frame index
-        if (frames1.length) {
-            currentFrameIdx = Math.min(
-                Math.floor(progress * frames1.length),
-                frames1.length - 1
-            );
-        }
-
-        const bgT = Math.max(0, Math.min(1, (progress - 0.65) / 0.35));
-        document.getElementById('scene-bg').style.background =
-            `rgb(${Math.round(lerp(255,5,bgT))},${Math.round(lerp(255,5,bgT))},${Math.round(lerp(255,7,bgT))})`;
-
-        if (bgT < 0.5) header.classList.add('scene-light');
-        else           header.classList.remove('scene-light');
-
-        hint.style.opacity = Math.max(0, 1 - progress * 20);
-
-        const { s, e } = getHologramRange();
-        const showHolo = progress >= s && progress <= e;
-        carouselVisible = showHolo;
-        projBox.classList.toggle('visible', showHolo);
-
-        if (progress >= 0.98 && !sceneDone) {
-            sceneDone = true;
-            document.body.classList.remove('scene-active');
-            document.querySelector('main').style.animation = 'sceneReveal 0.6s ease both';
-        } else if (progress < 0.98 && sceneDone) {
-            sceneDone = false;
-            document.body.classList.add('scene-active');
-        }
-    }
-
-    // ── Runtime config ──
-    window.configureScene = function(cfg) {
-        configureSceneCalled = true;
-        if (!cfg) return;
-        if (cfg.enabled === false) {
-            sceneEnabled = false;
-            scene.style.display = 'none';
-            document.getElementById('scene-bg').style.display = 'none';
-            document.body.classList.remove('scene-active');
-            const m = document.querySelector('main');
-            if (m) m.style.visibility = 'visible';
-            const ft = document.querySelector('footer');
-            if (ft) ft.style.visibility = 'visible';
-            header.classList.remove('scene-light');
-            return;
-        }
-        if (cfg.scrollHeight) scene.style.height = cfg.scrollHeight + 'vh';
-        if (typeof cfg.carouselSpeed  === 'number') carouselSpeedDeg = cfg.carouselSpeed;
-        if (cfg.hologramType)                       hologramType     = cfg.hologramType;
-        if (typeof cfg.hologramYOffset === 'number') hologramYOffset = cfg.hologramYOffset;
-        hologramConfig = cfg;
-
-        const src1 = cfg.layer1Video ? `frames/${cfg.layer1Video}` : 'frames/1.mp4';
-        const src2 = cfg.layer2Video ? `frames/${cfg.layer2Video}` : 'frames/2.mp4';
-        initAnimation(cfg);
-    };
-
-    document.body.classList.add('scene-active');
-    header.classList.add('scene-light');
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', () => {
-        resizeCanvas();
-        onScroll();
-    });
-
-    // Fallback: start with defaults if configureScene never called
-    setTimeout(() => {
-        if (!configureSceneCalled && !ready) {
-            initAnimation({ animationMode: 'mp4', layer1Video: '1.mp4', layer2Video: '2.mp4' });
-        }
-    }, 3000);
-})();
-</script>
-<!-- ═══ END FRAME SCENE JS ═══ -->
-
-
+<script src="data.js?v=2" defer></script>
+<script src="bg-shader.js?v=3" defer></script>
+<script src="scene.js?v=2" defer></script>
+<script src="app.js?v=2" defer></script>
 </body>
 </html>
