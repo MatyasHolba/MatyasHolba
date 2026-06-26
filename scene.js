@@ -327,11 +327,18 @@
   }
 
   /* ── Pre-decode MP4 → ImageBitmap[] (Apple-style) ── */
-  async function decodeVideoFromURL(url, onProgress) {
+  async function decodeVideoFromURL(url, framesArray, onProgress, onFirstFrame) {
     let blobUrl = url;
     try {
-      const r = await fetch(url);
-      if (r.ok) blobUrl = URL.createObjectURL(await r.blob());
+      const cache = await caches.open('mp4-cache-v1');
+      const resp = await cache.match(url);
+      if (resp && resp.ok) {
+        blobUrl = URL.createObjectURL(await resp.blob());
+      } else {
+        // Not in cache. Fetch in background to cache for next visit.
+        fetch(url).then(r => { if (r.ok) cache.put(url, r.clone()); }).catch(()=>{});
+        // We use the raw 'url' for blobUrl to avoid blocking the first frame!
+      }
     } catch { /* fallback to streaming URL */ }
 
     const vid = document.createElement('video');
@@ -356,7 +363,6 @@
     const total      = knownTotal > 0 ? knownTotal : Math.round(dur * 25);
     const usable     = Math.max(total - skipFrames, 1);
     const frameCount = Math.ceil(usable / frameStep);
-    const frames     = [];
 
     const w = vid.videoWidth || 1280, h = vid.videoHeight || 720;
     const cap = document.createElement('canvas');
@@ -376,31 +382,35 @@
       try {
         capCtx.clearRect(0, 0, w, h);
         capCtx.drawImage(vid, 0, 0, w, h);
-        frames.push(await createImageBitmap(cap));
+        framesArray[i] = await createImageBitmap(cap);
       } catch {
-        frames.push(frames[frames.length - 1] ?? null);
+        framesArray[i] = framesArray[Math.max(0, i - 1)] ?? null;
       }
       onProgress && onProgress((i + 1) / frameCount);
-      // Breather for UI (Prevents 20-second freeze)
+      if (i === 0 && onFirstFrame) onFirstFrame();
       await new Promise(r => setTimeout(r, 0));
     }
-
 
     vid.src = '';
     document.body.removeChild(vid);
     if (blobUrl !== url) URL.revokeObjectURL(blobUrl);
-    const first = frames.find(Boolean);
-    return frames.map(f => f ?? first);
+    
+    // Fill any missing nulls at the end
+    const first = framesArray.find(Boolean);
+    for (let i=0; i<frameCount; i++) {
+        if (!framesArray[i]) framesArray[i] = framesArray[i-1] ?? first;
+    }
   }
 
   /* ── Load PNG frame images (legacy frames/ mode) ── */
-  async function loadFrameImages(layer, frameCount, onProgress, cacheVer) {
+  async function loadFrameImages(layer, frameCount, onProgress, cacheVer, framesArray, onFirstFrame) {
     const folder = layer === 1 ? 'first_layer' : 'second_layer';
     let cache = null;
     try { cache = await caches.open('frames-v-' + cacheVer); } catch {}
-    const bitmaps = new Array(frameCount).fill(null);
     let done = 0;
-    await Promise.all(Array.from({ length: frameCount }, async (_, i) => {
+    
+    // Sequential load to allow first frame fast exit
+    for (let i = 0; i < frameCount; i++) {
       const url = `frames/${folder}/frame_${String(i).padStart(4,'0')}.png`;
       let src = url;
       try {
@@ -412,14 +422,18 @@
       } catch {}
       await new Promise(resolve => {
         const img = new Image();
-        img.onload  = async () => { try { bitmaps[i] = await createImageBitmap(img); } catch { bitmaps[i] = img; } resolve(); };
+        img.onload  = async () => { try { framesArray[i] = await createImageBitmap(img); } catch { framesArray[i] = img; } resolve(); };
         img.onerror = () => resolve();
         img.src = src;
       });
       onProgress && onProgress(++done / frameCount);
-    }));
-    const first = bitmaps.find(b => b !== null);
-    return bitmaps.map(b => b ?? first);
+      if (i === 0 && onFirstFrame) onFirstFrame();
+      await new Promise(r => setTimeout(r, 0));
+    }
+    const first = framesArray.find(Boolean);
+    for (let i=0; i<frameCount; i++) {
+        if (!framesArray[i]) framesArray[i] = framesArray[i-1] ?? first;
+    }
   }
 
   /* ── Init: load + pre-decode ── */
@@ -433,15 +447,19 @@
       for (const k of keys) { if (k.startsWith('frames-v-') && k !== 'frames-v-' + cacheVer) await caches.delete(k); }
     } catch {}
 
+    const pFirst1 = new Promise(r => { initAnimation.onF1 = r; });
+    const pFirst2 = new Promise(r => { initAnimation.onF2 = r; });
+    
+    frames1 = []; frames2 = [];
+
     if (mode === 'frames') {
       const totalFrames = cfg.totalFrames || 93;
       let p1 = 0, p2 = 0;
       const upd = () => setProgress((p1 + p2) / 2);
-      const [f1, f2] = await Promise.all([
-        loadFrameImages(1, totalFrames, p => { p1 = p; upd(); }, cacheVer),
-        loadFrameImages(2, totalFrames, p => { p2 = p; upd(); }, cacheVer),
-      ]);
-      frames1 = f1; frames2 = f2;
+      
+      // Start background tasks
+      loadFrameImages(1, totalFrames, p => { p1 = p; upd(); }, cacheVer, frames1, initAnimation.onF1);
+      loadFrameImages(2, totalFrames, p => { p2 = p; upd(); }, cacheVer, frames2, initAnimation.onF2);
     } else {
       const src1 = cfg.layer1Video ? `frames/${cfg.layer1Video}` : 'frames/1.mp4';
       const src2 = cfg.layer2Video ? `frames/${cfg.layer2Video}` : 'frames/2.mp4';
@@ -454,20 +472,23 @@
       decodeVideoFromURL._opts = { skipFrames: 0, frameStep: fStep, knownTotal: cfg.totalFrames || 60 };
       let p1 = 0, p2 = 0;
       const updPar = () => setProgress(0.02 + ((p1 + p2) / 2) * 0.96);
-      const safeDecode = async (src, progressFn) => {
+      
+      const safeDecode = async (src, framesArr, progressFn, firstFn) => {
         try {
-          return await decodeVideoFromURL(src, progressFn);
+          await decodeVideoFromURL(src, framesArr, progressFn, firstFn);
         } catch (err) {
           console.warn("Failed to decode video frame layer:", src, err);
-          return [];
+          firstFn(); // prevent hanging
         }
       };
-      const [f1, f2] = await Promise.all([
-        safeDecode(src1, p => { p1 = p; updPar(); }),
-        safeDecode(src2, p => { p2 = p; updPar(); }),
-      ]);
-      frames1 = f1; frames2 = f2;
+      
+      // Start background decoding
+      safeDecode(src1, frames1, p => { p1 = p; updPar(); }, initAnimation.onF1);
+      safeDecode(src2, frames2, p => { p2 = p; updPar(); }, initAnimation.onF2);
     }
+
+    // Wait ONLY for the first frame of each layer
+    await Promise.all([pFirst1, pFirst2]);
 
     ready = true;
     setProgress(1);
