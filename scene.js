@@ -589,15 +589,20 @@
 
     if (Y <= S_hero) {
       const p = Y / (S_hero || 1);
+      const isMobile = window.innerWidth < 768;
       if (heroLeft) {
-        const translateX = p * -(window.innerWidth * 0.6); // Jde ostře do levé strany
+        const translateX = isMobile ? 0 : p * -(window.innerWidth * 0.6); // Jde ostře do levé strany
         const translateY = 0; // Žádný pohyb nahoru, jak sis přál!
         const scale = 1 - (p * 0.4); 
         heroLeft.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
         heroLeft.style.transformOrigin = 'left center'; // Zmenšuje se a zůstane ve svém rohu
         heroLeft.style.opacity = 1;
       }
-      if (heroPhoto) { heroPhoto.style.transform = `translateX(${p * (window.innerWidth * 0.6)}px) scale(${1 - p * 0.2})`;  heroPhoto.style.opacity = 1 - (p * 1.5); }
+      if (heroPhoto) { 
+        const translateX = isMobile ? 0 : p * (window.innerWidth * 0.6);
+        heroPhoto.style.transform = `translateX(${translateX}px) scale(${1 - p * 0.2})`;  
+        heroPhoto.style.opacity = 1 - (p * 1.5); 
+      }
       if (fixedCanvas) { fixedCanvas.style.opacity = p; fixedCanvas.style.transform = `scale(${0.8 + 0.2 * p})`; }
     } else {
       if (heroLeft) {
