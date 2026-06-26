@@ -372,7 +372,8 @@
     const capCtx = cap.getContext('2d');
 
     for (let i = 0; i < frameCount; i++) {
-      const frameIdx  = skipFrames + i * frameStep;
+      let frameIdx  = skipFrames + i * frameStep;
+      if (i === frameCount - 1) frameIdx = total - 1; // Force the very last frame to reach the end of the video!
       vid.currentTime = Math.min((frameIdx / total) * dur, dur * 0.999);
 
       await new Promise(resolve => {
