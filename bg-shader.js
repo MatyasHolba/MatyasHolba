@@ -15,6 +15,7 @@ const fragmentShaderSource = `
   uniform float u_themeFade;
   uniform float u_sectionTop;
   uniform float u_isHovering;
+  uniform float u_pixelScale;
 
   // Modulo 289
   vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -51,8 +52,9 @@ const fragmentShaderSource = `
   }
 
   void main() {
-    vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-    vec2 pos = gl_FragCoord.xy; // pixel coords
+    vec2 realCoord = gl_FragCoord.xy * u_pixelScale;
+    vec2 uv = realCoord / u_resolution.xy;
+    vec2 pos = realCoord; // pixel coords
     
     // Scroll offset (make the pattern move up as we scroll down)
     pos.y += u_scrollY * 0.5;
@@ -85,10 +87,10 @@ const fragmentShaderSource = `
 
     // Calculate spatial boundary for top transition
     float boundaryY = u_resolution.y - u_sectionTop;
-    boundaryY += sin(gl_FragCoord.x * 0.003 + u_time * 0.5) * 20.0 + cos(gl_FragCoord.x * 0.007 - u_time * 0.3) * 15.0;
+    boundaryY += sin(realCoord.x * 0.003 + u_time * 0.5) * 20.0 + cos(realCoord.x * 0.007 - u_time * 0.3) * 15.0;
     
     // spatialTheme is 1.0 below the boundary, 0.0 above
-    float spatialTheme = 1.0 - smoothstep(boundaryY - 1.0, boundaryY + 1.0, gl_FragCoord.y);
+    float spatialTheme = 1.0 - smoothstep(boundaryY - 1.0, boundaryY + 1.0, realCoord.y);
     
     // Combine with bottom fade
     float finalTheme = spatialTheme * u_themeFade;
@@ -103,7 +105,7 @@ const fragmentShaderSource = `
     vec3 colorHover = mix(hoverBg, hoverLine, lines);
     
     // Compute distance to mouse
-    vec2 delta = gl_FragCoord.xy - vec2(u_mouse.x, u_resolution.y - u_mouse.y);
+    vec2 delta = realCoord - vec2(u_mouse.x, u_resolution.y - u_mouse.y);
     float angle = atan(delta.y, delta.x);
     
     // Organic wobble using trig
@@ -180,6 +182,7 @@ function initBgShader() {
   const uThemeFade = gl.getUniformLocation(program, 'u_themeFade');
   const uSectionTop = gl.getUniformLocation(program, 'u_sectionTop');
   const uIsHovering = gl.getUniformLocation(program, 'u_isHovering');
+  const uPixelScale = gl.getUniformLocation(program, 'u_pixelScale');
 
   const frameScene = document.getElementById('frame-scene');
 
@@ -230,16 +233,22 @@ function initBgShader() {
   });
 
   const isMobile = window.innerWidth < 768;
+  const isLowPerf = window.perfGrade === 'low';
+  const isStaticMobile = isMobile && isLowPerf;
+  let pixelScale = 1.0;
 
   function resize() {
     const maxDim = 2560;
     let baseScale = Math.min(1, maxDim / Math.max(window.innerWidth, window.innerHeight));
     
-    // On mobile, we keep scale at 1.0 for a beautifully crisp static image
-    if (!isMobile) {
+    // On low mobile devices, we keep scale at 1.0 for a beautifully crisp static image
+    if (isStaticMobile) {
+      baseScale = 1.0;
+    } else {
       if (window.perfGrade === 'low') baseScale *= 0.25;
       else if (window.perfGrade === 'medium') baseScale *= 0.5;
     }
+    pixelScale = 1.0 / baseScale;
     
     canvas.width = Math.floor(window.innerWidth * baseScale);
     canvas.height = Math.floor(window.innerHeight * baseScale);
@@ -252,7 +261,7 @@ function initBgShader() {
   let hasRenderedMobile = false;
 
   function render(now) {
-    if (isMobile && hasRenderedMobile) return; // Render exactly once on mobile!
+    if (isStaticMobile && hasRenderedMobile) return; // Render exactly once on low mobile!
 
     let fadeTheme = 1.0;
     let sectionTop = 10000.0;
@@ -260,7 +269,7 @@ function initBgShader() {
       const rect = frameScene.getBoundingClientRect();
       sectionTop = rect.top;
       // If the scene is completely scrolled out of view, don't draw (save battery/CPU)
-      if (rect.bottom < 0 && !isMobile) {
+      if (rect.bottom < 0 && !isStaticMobile) {
           requestAnimationFrame(render);
           return;
       }
@@ -277,10 +286,11 @@ function initBgShader() {
     gl.uniform1f(uIsHovering, isHovering);
     gl.uniform1f(uThemeFade, fadeTheme);
     gl.uniform1f(uSectionTop, sectionTop);
+    gl.uniform1f(uPixelScale, pixelScale);
 
     gl.drawArrays(gl.TRIANGLES, 0, 6);
     
-    if (isMobile) {
+    if (isStaticMobile) {
       hasRenderedMobile = true;
     } else {
       requestAnimationFrame(render);
