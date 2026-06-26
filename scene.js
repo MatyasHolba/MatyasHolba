@@ -167,6 +167,8 @@
     
     canvas.style.transform = `perspective(1400px) rotateY(${rotY}deg) translate(${transX}px,${transY}px) scale(${scl})`;
 
+    const maxIdx = Math.max(0, frames1.length - 1);
+    targetFrameIdx = Math.min(Math.floor(window.idealTargetF || 0), maxIdx);
     currentFrameFloat += (targetFrameIdx - currentFrameFloat) * 0.08;
     currentFrameIdx    = Math.round(currentFrameFloat);
 
@@ -454,6 +456,7 @@
 
     if (mode === 'frames') {
       const totalFrames = cfg.totalFrames || 93;
+      window.expectedFrames = totalFrames;
       let p1 = 0, p2 = 0;
       const upd = () => setProgress((p1 + p2) / 2);
       
@@ -469,7 +472,10 @@
       if (window.perfGrade === 'low') fStep = 4;
       else if (window.perfGrade === 'high') fStep = 1;
       
-      decodeVideoFromURL._opts = { skipFrames: 0, frameStep: fStep, knownTotal: cfg.totalFrames || 60 };
+      const totalFramesConfig = cfg.totalFrames || 60;
+      window.expectedFrames = Math.ceil(totalFramesConfig / fStep);
+      decodeVideoFromURL._opts = { skipFrames: 0, frameStep: fStep, knownTotal: totalFramesConfig };
+      
       let p1 = 0, p2 = 0;
       const updPar = () => setProgress(0.02 + ((p1 + p2) / 2) * 0.96);
       
@@ -614,10 +620,11 @@
 
     /* 2. CHARACTER ANIMATION */
     let targetF = 0;
+    const expFrames = window.expectedFrames || 60;
     if (Y <= S_hero)                         targetF = 0;
-    else if (Y > S_hero && Y <= S_intro)     targetF = ((Y - S_hero) / V) * 60;
-    else                                     targetF = 60;
-    targetFrameIdx = Math.min(Math.floor(targetF), frames1.length - 1);
+    else if (Y > S_hero && Y <= S_intro)     targetF = ((Y - S_hero) / V) * expFrames;
+    else                                     targetF = expFrames;
+    window.idealTargetF = targetF;
 
     /* 3. CAROUSEL & CARDS */
     let activeCardIndex = -1;
