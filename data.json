@@ -23,6 +23,18 @@
   },
   "feed": [
     {
+      "id": "feed-1782497417230",
+      "date": "26. června 2026",
+      "text": "🚀 Po necelém týdnu práce jsem dokončil kompletní redesign svého portfolia.\n\nNová verze přináší modernější vzhled, lepší prezentaci projektů a spoustu dalších vylepšení. Ještě mě čeká finální optimalizace, ale hlavní část je hotová.",
+      "photo": ""
+    },
+    {
+      "id": "feed-1782497009388",
+      "date": "23. června 2026",
+      "text": "Pořídil jsem si vlastní doménu pro své portfolio.\n\nNově můj web najdete na:\n👉 matyasholba.cz\n",
+      "photo": "photos/koupeni domeny.webp"
+    },
+    {
       "date": "21. června 2026",
       "id": "feed-1",
       "photo": "",
