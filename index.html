@@ -1,441 +1,49 @@
 <!DOCTYPE html>
 <html lang="cs">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="color-scheme" content="dark">
-<meta name="darkreader-lock">
-<title>MH — Portfolio</title>
-<meta name="description" content="Programuji, hledám vlastní cestu, stavím věci od základu.">
-
-<link rel="icon" id="favicon-link" href="favicon.png" type="image/png">
-
-<meta property="og:title" content="Matyáš Holba">
-<meta property="og:description" content="Programuji, hledám vlastní cestu, stavím věci od základu.">
-<meta property="og:image" content="https://matyasholba.github.io/MatyasHolba/og-image.png">
-<meta property="og:url" content="https://matyasholba.github.io/MatyasHolba/">
-<meta property="og:type" content="website">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="styles.css?v=2">
-<script>
-// --- Device Benchmark ---
-window.perfGrade = 'high'; // Default
-(function() {
-    try {
-        const start = performance.now();
-        let iters = 0;
-        // Simple CPU benchmark
-        for (let i = 0; i < 2000000; i++) { iters += Math.sqrt(i); }
-        const duration = performance.now() - start;
-        if (duration > 35) window.perfGrade = 'low';
-        else if (duration > 15) window.perfGrade = 'medium';
-        else window.perfGrade = 'high';
-        
-        // Also factor in device width/mobile
-        const isMobile = window.innerWidth < 768;
-        if (isMobile && window.perfGrade === 'high') window.perfGrade = 'medium'; 
-        console.log('Perf Grade:', window.perfGrade, '(', duration.toFixed(1), 'ms)');
-    } catch(e) {}
-})();
-</script>
-</head>
-<body class="smooth-scroll">
-
-<!-- Global WebGL Background -->
-<canvas id="global-webgl-bg"></canvas>
-
-<!-- Custom cursor -->
-<div id="cursor-dot"></div>
-<div id="cursor-ring"></div>
-<div id="scroll-progress"></div>
-<canvas id="cursor-trail"></canvas>
-
-<!-- Loading screen -->
-<div id="loading">
-  <div class="load-text">
-    <span class="load-letter">M</span>
-    <span class="load-letter">H</span>
-  </div>
-  <div class="load-bar"><div class="load-bar-fill"></div></div>
-</div>
-
-<!-- Lightbox -->
-<div class="lightbox" id="lightbox" role="dialog" aria-modal="true">
-  <button class="lightbox-close" id="lightboxClose" aria-label="Zavřít">✕</button>
-  <img class="lightbox-img" id="lightboxImg" src="" alt="">
-  <div class="lightbox-caption" id="lightboxCaption"></div>
-</div>
-
-<!-- Mobile nav overlay -->
-<nav class="mobile-nav" id="mobile-nav" aria-label="Mobilní navigace"></nav>
-
-<!-- Navigation -->
-<header id="header">
-  <a href="#" class="logo" id="nav-logo">MH</a>
-  <ul class="nav-links" id="nav-links"></ul>
-  <button class="nav-hamburger" id="nav-hamburger" aria-label="Otevřít menu" aria-expanded="false">
-    <span></span><span></span><span></span>
-  </button>
-</header>
-
-<!-- Hero -->
-<div id="hero-scroll-container">
-  <div class="hero-wrapper" id="hero">
-    <div class="hero-bg-accent"></div>
-    <div class="hero-bg-accent2"></div>
-
-    <div class="hero-scroll-hint">
-      <div class="hero-scroll-line"></div>
-      <div class="hero-scroll-label">Scroll</div>
-    </div>
-
-    <div class="hero-left">
-      <div class="hero-eyebrow" id="hero-eyebrow">Portfolio</div>
-
-      <h1 class="hero-name" id="hero-name">
-        <div class="hero-name-pablo" id="hero-name-pablo">
-          <span style="transition-delay:0.15s">P</span><span style="transition-delay:0.19s">A</span><span style="transition-delay:0.23s">B</span><span style="transition-delay:0.27s">L</span><span style="transition-delay:0.31s">O</span>
-        </div>
-        <span class="hero-name-line"><span class="hero-name-inner" id="hero-name-1">
-          <span style="transition-delay:0.10s">M</span><span style="transition-delay:0.13s">A</span><span style="transition-delay:0.16s">T</span><span style="transition-delay:0.19s">Y</span><span style="transition-delay:0.22s">Á</span><span style="transition-delay:0.25s">Š</span>
-        </span></span>
-        <span class="hero-name-line"><span class="hero-name-inner" id="hero-name-2">
-          <span style="transition-delay:0s">H</span><span style="transition-delay:0.03s">O</span><span style="transition-delay:0.06s">L</span><span style="transition-delay:0.09s">B</span><span style="transition-delay:0.12s">A</span>
-        </span></span>
-      </h1>
-
-      <div class="hero-bottom">
-        <div class="hero-descriptor" id="hero-descriptor">
-          <span>Student</span>
-          <span class="hero-sep">—</span>
-          <span>Developer</span>
-          <span class="hero-sep">—</span>
-          <span>Builder</span>
-        </div>
-        <div class="hero-meta" id="hero-meta">
-          <div class="hero-meta-item">
-            <div class="hero-meta-label">Věk</div>
-            <div class="hero-meta-value" id="hero-age">20</div>
-          </div>
-          <div class="hero-meta-item">
-            <div class="hero-meta-label">Škola</div>
-            <div class="hero-meta-value">GMK</div>
-          </div>
-          <div class="hero-meta-item">
-            <div class="hero-meta-label">Lokace</div>
-            <div class="hero-meta-value">ČR</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="hero-photo-col">
-      <div class="hero-photo-frame" id="hero-photo-frame">
-        <div class="hero-photo-corner"></div>
-        <img src="photos/profile picture.webp" alt="Matyáš Holba" loading="eager">
-        <div class="hero-photo-badge">
-          <div class="hero-photo-dot"></div>
-          <span>Matyáš Holba · Developer</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Scroll animation scene -->
-<div id="fixed-canvas-container">
-  <div id="scene-bg"></div>
-  <video id="vid-layer1" muted playsinline preload="auto" style="display:none"></video>
-  <video id="vid-layer2" muted playsinline preload="auto" style="display:none"></video>
-  <canvas id="frame-canvas" style="width:100%;height:100vh;object-fit:cover;mask-image:linear-gradient(to bottom,black 85%,transparent 100%);-webkit-mask-image:linear-gradient(to bottom,black 85%,transparent 100%);"></canvas>
-  <div id="scene-bg-text"></div>
-</div>
-
-<!-- Main content -->
-<main id="main-content">
-
-  <div class="smoke-bg-overlay" id="smoke-bg-overlay"></div>
-
-  <div id="cards-container">
-
-    <!-- CARD 1: O mně & Cíle -->
-    <div class="hologram-card" id="card-about">
-      <div class="hologram-card-content">
-        <section id="about">
-          <div class="section">
-            <div class="sec-header reveal">
-              <span class="sec-num" id="about-num">01</span>
-              <span class="sec-title">O mně</span>
-              <div class="sec-line"></div>
-            </div>
-            <div class="about-grid">
-              <div class="about-left">
-                <p class="about-pull reveal" id="about-pull">Stavím věci,<br>které <span class="highlight">fungují.</span></p>
-                <p class="about-bio reveal" id="bio-text"></p>
-                <div class="about-stats stagger-children" id="about-stats"></div>
-              </div>
-              <div class="about-right reveal">
-                <div class="about-right-inner">
-                  <div class="about-image-placeholder" id="about-image"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="goals" style="display:none">
-          <div class="section">
-            <div class="sec-header reveal">
-              <span class="sec-num" id="goals-num">02</span>
-              <span class="sec-title">Cíle</span>
-              <div class="sec-line"></div>
-            </div>
-            <div class="goals-wrap" id="goals-list"></div>
-          </div>
-        </section>
-      </div>
-    </div>
-
-    <!-- CARD 2: Projekty -->
-    <div class="hologram-card" id="card-projects">
-      <div class="hologram-card-content">
-        <section id="projects" style="display:none">
-          <div class="section">
-            <div class="sec-header reveal">
-              <span class="sec-num" id="projects-num">03</span>
-              <span class="sec-title">Projekty</span>
-              <div class="sec-line"></div>
-            </div>
-            <div class="projects-grid stagger-children" id="projects-grid"></div>
-          </div>
-        </section>
-      </div>
-    </div>
-
-    <!-- CARD 3: Gaming & Feed -->
-    <div class="hologram-card" id="card-feed">
-      <div class="hologram-card-content">
-
-        <!-- Gaming -->
-        <div class="gaming-section">
-          <div class="gaming-inner">
-            <div class="gaming-grid">
-              <div class="gaming-text reveal">
-                <div class="gaming-label">Koníčky</div>
-                <div class="gaming-title">GAMER<br><span>AT HEART</span></div>
-                <p class="gaming-desc">Hraní videoher je prokletí, které rád přijímám. Counter-Strike 2 je moje hlavní hra — přes 1500 hodin na jednom účtu, celkem 6 účtů. Každý s minimálně 150 hodinami.</p>
-                <div class="gaming-stats-row">
-                  <div class="gaming-stat"><div class="gaming-stat-num" id="stat-cs2-hours">1572<span>h</span></div><div class="gaming-stat-label">CS2 hlavní</div></div>
-                  <div class="gaming-stat"><div class="gaming-stat-num" id="stat-steam-accounts">6</div><div class="gaming-stat-label">Steam účtů</div></div>
-                  <div class="gaming-stat"><div class="gaming-stat-num" id="stat-steam-friends">142</div><div class="gaming-stat-label">Steam přátel</div></div>
-                </div>
-              </div>
-              <div class="gaming-visual reveal">
-                <div class="gaming-screenshot">
-                  <img src="photos/cs2-stats.webp" alt="CS2 Stats" loading="lazy">
-                  <div class="gaming-screenshot-overlay"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Performance Carousel -->
-        <div class="perf-section">
-          <div class="perf-inner">
-            <div class="perf-carousel-container" id="perf-carousel">
-              <div class="perf-carousel-track" id="perf-track">
-
-                <!-- Slide 1: MonkeyType -->
-                <div class="perf-slide active">
-                  <div class="perf-grid">
-                    <div class="perf-text reveal">
-                      <div class="perf-label">Rychlost psaní</div>
-                      <div class="perf-title">TYPE<br><span>AT SPEED</span></div>
-                      <p class="perf-desc">Rychlost psaní je dovednost, kterou aktivně trénuji na MonkeyType. Každý den pár minut — a výsledky se dostavují. Píšu všemi deseti od začátku.</p>
-                      <div class="perf-stats-row">
-                        <div class="perf-stat"><div class="perf-stat-num">80<span>wpm</span></div><div class="perf-stat-label">Maximum</div></div>
-                        <div class="perf-stat"><div class="perf-stat-num">40<span>wpm</span></div><div class="perf-stat-label">Průměr</div></div>
-                        <div class="perf-stat"><div class="perf-stat-num">10<span>prst</span></div><div class="perf-stat-label">Všemi deseti</div></div>
-                      </div>
-                    </div>
-                    <div class="perf-visual reveal">
-                      <div class="perf-screenshot">
-                        <img src="photos/monkeytype-extension.webp" alt="MonkeyType" loading="lazy">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Slide 2: Duolingo -->
-                <div class="perf-slide">
-                  <div class="perf-grid">
-                    <div class="perf-text reveal">
-                      <div class="perf-label">Jazyky</div>
-                      <div class="perf-title">DUOLINGO<br><span>STREAK</span></div>
-                      <p class="perf-desc">Aktivní výuka cizích jazyků. Můj denní rituál pro udržení mozku v kondici. Zlepšuji se v angličtině, němčině a spoustě dalších jazyků.</p>
-                      <div class="perf-stats-row">
-                        <div class="perf-stat"><div class="perf-stat-num" id="duo-days">0<span>dnů</span></div><div class="perf-stat-label">V kuse</div></div>
-                        <div class="perf-stat"><div class="perf-stat-num" id="duo-xp">0<span>XP</span></div><div class="perf-stat-label">Zkušeností</div></div>
-                        <div class="perf-stat"><div class="perf-stat-num" id="duo-langs">0<span>liga</span></div><div class="perf-stat-label">Aktuální</div></div>
-                      </div>
-                    </div>
-                    <div class="perf-visual reveal">
-                      <div class="perf-screenshot" style="border-radius:12px;overflow:hidden;">
-                        <img src="photos/duolingo-me.jpeg" alt="Duolingo Me" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-              <div class="perf-controls reveal" style="justify-content:center;">
-                <div class="perf-dot active" data-slide="0"></div>
-                <div class="perf-dot" data-slide="1"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Setup -->
-        <div class="setup-section" id="setup">
-          <div class="setup-inner">
-            <div class="setup-header reveal">
-              <div>
-                <div class="setup-label">Hardware</div>
-                <div class="setup-title">MŮJ<br><span>SETUP</span></div>
-              </div>
-            </div>
-            <div class="setup-grid stagger-children">
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="8" rx="2"/><path d="M6 8V6a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v2"/><line x1="12" y1="16" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/></svg>
-                <div class="spec-name">Procesor</div>
-                <div class="spec-value">Intel Core i7-13400</div>
-                <div class="spec-sub">13. generace · 10 jader · 16 vláken</div>
-              </div>
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="20" height="6" rx="2"/><path d="M6 9V7a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v2"/><line x1="6" y1="12" x2="6" y2="12.01"/><line x1="10" y1="12" x2="10" y2="12.01"/><line x1="14" y1="12" x2="14" y2="12.01"/><line x1="18" y1="12" x2="18" y2="12.01"/></svg>
-                <div class="spec-name">Paměť RAM</div>
-                <div class="spec-value">32 GB DDR4</div>
-                <div class="spec-sub">Dual channel</div>
-              </div>
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 4v16"/><circle cx="17" cy="9" r="1"/><circle cx="17" cy="14" r="1"/></svg>
-                <div class="spec-name">Úložiště</div>
-                <div class="spec-value">1.5 TB SSD</div>
-                <div class="spec-sub">+ 5 TB HDD zálohy</div>
-              </div>
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-                <div class="spec-name">Displeje</div>
-                <div class="spec-value">2× 27" 2K</div>
-                <div class="spec-sub">180 Hz · dual monitor setup</div>
-              </div>
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
-                <div class="spec-name">Internet</div>
-                <div class="spec-value">100 Mbps</div>
-                <div class="spec-sub">MikroTik Gigabit · průměr ~70 Mbps</div>
-              </div>
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
-                <div class="spec-name">Grafická karta</div>
-                <div class="spec-value">NVIDIA RTX</div>
-                <div class="spec-sub">Ray tracing · DLSS · výkon pro kreativu</div>
-              </div>
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="16" width="20" height="4" rx="1"/><path d="M6 16V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"/></svg>
-                <div class="spec-name">Stůl</div>
-                <div class="spec-value">ASUS ROG 180 cm</div>
-                <div class="spec-sub">Výškově nastavitelný · 14 000 Kč</div>
-              </div>
-              <div class="spec-card">
-                <svg class="spec-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><circle cx="9" cy="10" r="2"/><path d="M14 10h3"/></svg>
-                <div class="spec-name">Operační systémy</div>
-                <div class="spec-value">Win 11 + Linux</div>
-                <div class="spec-sub">Kali · Ubuntu · Arch · WSL2</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Feed -->
-        <section id="feed" style="display:none">
-          <div class="section">
-            <div class="sec-header reveal">
-              <span class="sec-num" id="feed-num">04</span>
-              <span class="sec-title">Feed</span>
-              <div class="sec-line"></div>
-            </div>
-            <div class="feed-list" id="feed-list"></div>
-          </div>
-        </section>
-
-      </div>
-    </div>
-
-    <!-- CARD 5: Galerie -->
-    <div class="hologram-card" id="card-gallery">
-      <div class="hologram-card-content">
-        <section id="gallery" style="display:none">
-          <div class="section-full">
-            <div class="section">
-              <div class="sec-header reveal">
-                <span class="sec-num" id="gallery-num">05</span>
-                <span class="sec-title">Galerie</span>
-                <div class="sec-line"></div>
-              </div>
-            </div>
-            <div class="gallery-container reveal" id="gallery-grid"></div>
-          </div>
-        </section>
-       </div>
-    </div>
-
-    <!-- CARD 5: Kontakt -->
-    <div class="hologram-card" id="card-contact">
-      <div class="hologram-card-content">
-        <section id="contact" style="display:none">
-          <div class="section">
-            <div class="sec-header reveal">
-              <span class="sec-num" id="contact-num">06</span>
-              <span class="sec-title">Kontakt</span>
-              <div class="sec-line"></div>
-            </div>
-            <div class="contact-card-inner">
-              <!-- Dynamically populated -->
-            </div>
-          </div>
-          <div class="contact-card-footer">
-            <div class="contact-footer-line"></div>
-            <div class="contact-footer-inner">
-              <span class="contact-footer-logo" id="contact-footer-logo">MATYÁŠ <span>HOLBA</span></span>
-              <span class="contact-footer-copy" id="contact-footer-copy">© 2026 · Všechna práva vyhrazena</span>
-            </div>
-          </div>
-        </section>
-      </div>
-    </div>
-
-  </div><!-- /cards-container -->
-
-  <!-- Marquee (tech stack) fixed at bottom -->
-  <div class="marquee-section fixed-bottom" id="marquee-section">
-    <div class="marquee-track" id="marquee-track"></div>
-  </div>
-
-  <!-- Scroll ghost — height calculated by JS -->
-  <div id="scroll-ghost"></div>
-
-</main>
-
-
-<script src="bg-shader.js?v=3" defer></script>
-<script src="scene.js?v=2" defer></script>
-<script src="app.js?v=2" defer></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>MH — Portfolio</title>
+    <meta name="description" content="Matyáš Holba — student, developer, builder. Česká republika." />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:title" content="Matyáš Holba — Portfolio" />
+    <meta property="og:description" content="Matyáš Holba — student, developer, builder." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="./photos/PORTFOLIO OG OBRAZEK.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Matyáš Holba — Portfolio" />
+    <meta name="twitter:description" content="Matyáš Holba — student, developer, builder." />
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <link rel="preload" as="video" href="./frames/1.webm" type="video/webm" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html, body { margin: 0; padding: 0; background: #030306; }
+    </style>
+    <script>
+      // Omezeni priblizeni (desktop zoom interceptor)
+      document.addEventListener("wheel", function (e) {
+        if (e.ctrlKey) {
+          // Zabranime priblizeni/oddaleni pomoci kolecka mysi a Ctrl
+          e.preventDefault();
+        }
+      }, { passive: false });
+      
+      document.addEventListener("keydown", function (e) {
+        // Zabranime klavesovym zkratkam Ctrl + +, Ctrl + -, Ctrl + 0
+        if (e.ctrlKey && (e.key === "=" || e.key === "-" || e.key === "0" || e.key === "+")) {
+          e.preventDefault();
+        }
+      });
+    </script>
+    <script type="module" crossorigin src="./assets/index-CQoAIQk8.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-MMXVaTOv.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
